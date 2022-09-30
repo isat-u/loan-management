@@ -1,0 +1,9 @@
+**/migrations/*
+*.pyc
+.idea/
+.vscode/
+logs/
+venv/
+loan_management/SECRET_KEY
+loan_management/DEBUG
+loan_management/ENV

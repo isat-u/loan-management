@@ -1,0 +1,55 @@
+{% extends 'admin_dashboard/base.html' %}
+{% load static %}
+
+{% block header_css %} {% endblock %}
+{% block header_js %} {% endblock %}
+
+{% block page_wrapper_contents %}
+    <div class="row">
+        <div class="col-md-4 col-sm-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-4">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        Users
+                        <button class="btn btn-danger rounded-circle px-2 py-0 float-right"
+                                title="Inactive">{{ users.inactive.count }}</button>
+                        <button class="btn btn-success rounded-circle px-2 py-0 float-right mr-1"
+                                title="Active">{{ users.actives.count }}</button>
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Count</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ users.count }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-users fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+
+    <!-- Datatables -->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.datatable').DataTable({
+                bFilter: false,
+                bLengthChange: false,
+                pageLength: 10,
+            });
+        });
+    </script>
+    <!-- /Datatables -->
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+        });
+    </script>
+{% endblock %}
