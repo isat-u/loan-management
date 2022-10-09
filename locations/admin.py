@@ -4,6 +4,7 @@ from django.contrib import admin
 from .models import Region, Province, City, ProvinceCoordinate, CityCoordinate, \
     RegionCoordinate, Country
 
+
 class CountryAdmin(admin.ModelAdmin):
     list_display = ['name', 'iso3']
     search_fields = ['name']
