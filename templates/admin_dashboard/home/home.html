@@ -10,9 +10,9 @@
             <div class="card shadow mb-4">
                 <div class="card-header py-4">
                     <h6 class="m-0 font-weight-bold text-primary">
-                        Users
+                        Users Count
                         <button class="btn btn-danger rounded-circle px-2 py-0 float-right"
-                                title="Inactive">{{ users.inactive.count }}</button>
+                                title="Inactive">{% if users.inactives.count %}{{ users.inactive.count }}{% else %}0{% endif %}</button>
                         <button class="btn btn-success rounded-circle px-2 py-0 float-right mr-1"
                                 title="Active">{{ users.actives.count }}</button>
                     </h6>
