@@ -30,6 +30,8 @@
                     <thead>
                     <tr>
                         <th>Name</th>
+                        <th>User Type</th>
+                        <th>Staff</th>
                         <th class="text-right">Actions</th>
                     </tr>
                     </thead>
@@ -37,6 +39,8 @@
                     {% for obj in objects %}
                         <tr>
                             <td>{{ obj }}</td>
+                            <td>{{ obj.get_user_type_display }}</td>
+                            <td>{{ obj.is_staff }}</td>
                             <td class="td-actions text-right">
                                 <a class="btn btn-info btn-sm btn-icon" href="{% url 'admin_dashboard_accounts_detail' obj.pk %}">
                                     <i class="tim-icons icon-badge"></i>
