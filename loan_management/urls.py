@@ -54,6 +54,7 @@ urlpatterns = [
     path('profile/', include('profiles.urls')),
     path('accounts/', include('accounts.urls')),
     path('locations/', include('locations.urls')),
+    path('users/', include('users.urls')),
 
     # dashboards
     path('admin/', include('admin_dashboard.urls')),

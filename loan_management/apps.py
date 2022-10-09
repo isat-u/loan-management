@@ -52,4 +52,5 @@ INSTALLED_APPS += [
     'accounts',
     'profiles',
     'locations',
+    'users',
 ]

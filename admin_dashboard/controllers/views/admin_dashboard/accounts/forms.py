@@ -5,4 +5,10 @@ from accounts.models.account.models import Account
 class AccountForm(forms.ModelForm):
     class Meta:
         model = Account
-        fields = '__all__'
+        fields = (
+            'username',
+            'email',
+            'password',
+            'is_admin',
+            'user_type',
+        )
