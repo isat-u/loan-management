@@ -1,7 +1,7 @@
 from django.contrib.postgres.forms import JSONField
 from django.db import models, IntegrityError
 from django_extensions.db import fields as extension_fields
-
+from profiles.models.constants import CIVIL_STATUS_CHOICES, SINGLE
 from profiles.models.managers import ProfileManager, GenderManager
 
 
@@ -20,18 +20,31 @@ class Gender(models.Model):
     def __str__(self):
         return self.name
 
+
 class Profile(models.Model):
     # Fields
     first_name = models.CharField(max_length=32, blank=True, null=True, default='')
     middle_name = models.CharField(max_length=32, blank=True, null=True, default='')
     last_name = models.CharField(max_length=32, blank=True, null=True, default='')
     date_of_birth = models.DateField(default=None, blank=True, null=True)
-
+    civil_status = models.CharField(choices=CIVIL_STATUS_CHOICES, default=SINGLE, max_length=24)
+    contact_number = models.CharField(max_length=13, blank=True, null=True)
+    address = models.CharField(max_length=254, blank=True, null=True)
+    monthly_salary = models.DecimalField(max_digits=8, decimal_places=2, default=0.00, blank=True, null=True)
+    spouse_last_name = models.CharField(max_length=32, blank=True, null=True, default='')
+    spouse_middle_name = models.CharField(max_length=32, blank=True, null=True, default='')
+    spouse_first_name = models.CharField(max_length=32, blank=True, null=True, default='')
     created = models.DateTimeField(null=False, auto_now_add=True)
     updated = models.DateTimeField(null=False, auto_now=True)
 
     # Relationship Fields
     gender = models.ForeignKey(Gender, related_name='gender_profiles', on_delete=models.SET_NULL, null=True, blank=True)
+    region = models.ForeignKey('locations.Region', blank=True, default=6, null=False, on_delete=models.CASCADE,
+                               related_name='region_profiles')
+    province = models.ForeignKey('locations.Province', blank=True, default=22, null=False, on_delete=models.CASCADE,
+                                 related_name='province_profiles')
+    city = models.ForeignKey('locations.City', blank=True, default=381, null=False, on_delete=models.CASCADE,
+                             related_name='province_profiles')
     account = models.OneToOneField(
         'accounts.Account',
         on_delete=models.CASCADE,
@@ -49,8 +62,8 @@ class Profile(models.Model):
 
     def as_html(self):
         html = f"<p class='kv-pair kv-pair-center'><span class='kv-key'>Full Name</span><span class='kv-value'>{self.get_full_name()}</p>" \
-            f"<p class='kv-pair kv-pair-center'><span class='kv-key'>Sex</span><span class='kv-value'>{self.gender}</p>" \
-            f"<p class='kv-pair kv-pair-center'><span class='kv-key'>Date of Birth</span><span class='kv-value'>{self.date_of_birth}</p>"
+               f"<p class='kv-pair kv-pair-center'><span class='kv-key'>Sex</span><span class='kv-value'>{self.gender}</p>" \
+               f"<p class='kv-pair kv-pair-center'><span class='kv-key'>Date of Birth</span><span class='kv-value'>{self.date_of_birth}</p>"
         return html
 
     def get_casual_name(self):
@@ -72,6 +85,23 @@ class Profile(models.Model):
         if self.first_name != '' and self.last_name != '':
             return '{}, {}'.format(
                 self.last_name, self.first_name
+            )
+        else:
+            try:
+                if self.account.username is not None:
+                    return self.account.username
+            except AttributeError:
+                return 'Unnamed'
+            return 'Unnamed'
+
+    def get_spouse_full_name(self):
+        if self.spouse_first_name != '' and self.spouse_middle_name != '' and self.spouse_last_name != '':
+            return '{}, {} {}'.format(
+                self.spouse_last_name, self.spouse_middle_name[0], self.spouse_first_name
+            )
+        elif self.spouse_first_name != '' and self.spouse_last_name != '':
+            return '{}, {}'.format(
+                self.spouse_last_name, self.spouse_first_name
             )
         else:
             try:
