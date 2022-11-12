@@ -20,6 +20,7 @@ constantly
 coverage
 daphne
 decorator
+django-bootstrap-datepicker-plus
 django-cors-headers
 django-crispy-forms
 django-debug-toolbar===3.4.0

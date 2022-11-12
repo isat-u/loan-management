@@ -31,6 +31,7 @@ INSTALLED_APPS += [
     'rest_framework.authtoken',
     'drf_yasg',
     'corsheaders',
+    'bootstrap_datepicker_plus',
 ]
 
 # Utilities
