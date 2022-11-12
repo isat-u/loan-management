@@ -132,9 +132,9 @@ class AdminDashboardAccountCreateView(LoginRequiredMixin, IsAdminViewMixin, View
 
             return HttpResponseRedirect(
                 reverse(
-                    'admin_dashboard_accounts_detail',
+                    'admin_dashboard_profiles_update',
                     kwargs={
-                        'account': data.pk
+                        'profile': data.profile.pk
                     }
                 )
             )
@@ -172,6 +172,7 @@ class AdminDashboardAccountDetailView(LoginRequiredMixin, IsAdminViewMixin, View
 
     def get(self, request, *args, **kwargs):
         obj = get_object_or_404(Master, pk=kwargs.get('account', None))
+
         context = {
             "page_title": f"Account: {obj}",
             "menu_section": "admin_dashboard",

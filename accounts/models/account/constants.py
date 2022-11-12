@@ -20,7 +20,6 @@ ADMIN = 'ADM'
 USER = 'USR'
 
 USER_TYPE_CHOICES = (
-    (SUPERADMIN, 'Super Admin'),
     (ADMIN, 'Admin'),
     (USER, 'User'),
 )
@@ -30,3 +29,8 @@ USER_DASHBOARD_ROOTS = {
     ADMIN: 'admin',
     USER: '',
 }
+
+YES_NO = (
+    (True, 'Active'),
+    (False, 'Disable'),
+)

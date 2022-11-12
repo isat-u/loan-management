@@ -25,20 +25,26 @@
     </div>
 
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-6 my-2">
             <div class="card">
                 <div class="card-header">
                     <h5 class="card-category">&nbsp;</h5>
-                    <h2 class="card-title">{{ obj.name }}</h2>
+                    <h2 class="card-title">Details</h2>
                 </div>
                 <div class="card-body">
-                    <h4 class="card-title">{{ obj.name }}</h4>
+                    <h4 class="card-title">{{ obj.profile.get_name }}</h4>
                     <h6 class="card-subtitle mb-2 text-muted">Name</h6>
+                    <h4 class="card-title">{{ obj.profile.contact_number }}</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">Contact Number</h6>
+                    <h4 class="card-title">{{ obj.profile.get_civil_status_display }}</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">Civil Status</h6>
+                    <h4 class="card-title">{{ obj.profile.date_of_birth }}</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">Date of Birth</h6>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-6">
+        <div class="col-md-6 my-2">
             <div class="card">
                 <div class="card-header">
                     <h5 class="card-category">&nbsp;</h5>
@@ -59,6 +65,38 @@
                 </div>
             </div>
         </div>
+
+        <div class="col-md-6 my-2">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-category">&nbsp;</h5>
+                    <h2 class="card-title">Address Detail</h2>
+                </div>
+                <div class="card-body">
+                    <h4 class="card-title">{{ obj.profile.address }}</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">Address</h6>
+                    <h4 class="card-title">{{ obj.profile.region }}</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">Region</h6>
+                    <h4 class="card-title">{{ obj.profile.province }}</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">Province</h6>
+                    <h4 class="card-title">{{ obj.profile.city }}</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">City</h6>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 my-2">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-category">&nbsp;</h5>
+                    <h2 class="card-title">Emergency Contact</h2>
+                </div>
+                <div class="card-body">
+                    <h4 class="card-title">{{ obj.profile.get_spouse_full_name }}</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">Name</h6>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="card">
@@ -70,8 +108,8 @@
                 title="View List">
                 <i class="tim-icons icon-bullet-list-67"></i>
             </a>
-            <a class="btn btn-success btn-sm btn-icon" href="{% url 'admin_dashboard_accounts_update' obj.pk %}" title="Update Account">
-                <i class="tim-icons icon-settings"></i>
+            <a class="btn btn-success btn-sm btn-icon" href="{% url 'admin_dashboard_profiles_update' obj.profile.pk %}" title="Update Profile">
+                <i class="tim-icons icon-single-02"></i>
             </a>
             <a class="btn btn-danger btn-sm btn-icon" href="{% url 'admin_dashboard_accounts_delete' obj.pk %}"
                title="Delete Account">

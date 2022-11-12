@@ -10,7 +10,7 @@
             <div class="card shadow mb-4">
                 <div class="card-header py-4">
                     <h6 class="m-0 font-weight-bold text-primary">
-                        Users Count
+                        <a href="{% url 'admin_dashboard_accounts_list' %}">Users Count</a>
                         <button class="btn btn-danger rounded-circle px-2 py-0 float-right"
                                 title="Inactive">{% if users.inactives.count %}{{ users.inactive.count }}{% else %}0{% endif %}</button>
                         <button class="btn btn-success rounded-circle px-2 py-0 float-right mr-1"

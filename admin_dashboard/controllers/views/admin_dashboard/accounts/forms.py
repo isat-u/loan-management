@@ -1,14 +1,16 @@
 from django import forms
+
+from accounts.models.account.constants import YES_NO
 from accounts.models.account.models import Account
 
 
 class AccountForm(forms.ModelForm):
+    username = forms.CharField(label='Username', max_length=50)
+    email = forms.EmailField()
+    password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
+    password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput)
+    is_active = forms.ChoiceField(choices=YES_NO)
+
     class Meta:
         model = Account
-        fields = (
-            'username',
-            'email',
-            'password',
-            'is_admin',
-            'user_type',
-        )
+        fields = ('user_type',)
