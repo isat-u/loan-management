@@ -95,11 +95,8 @@ class Profile(models.Model):
             return 'Unnamed'
 
     def get_spouse_full_name(self):
-        if self.spouse_first_name != '' and self.spouse_middle_name != '' and self.spouse_last_name != '':
-            return '{}, {} {}'.format(
-                self.spouse_last_name, self.spouse_middle_name[0], self.spouse_first_name
-            )
-        elif self.spouse_first_name != '' and self.spouse_last_name != '':
+        if self.spouse_first_name is not None and self.spouse_last_name is not None:
+            print(self.spouse_first_name)
             return '{}, {}'.format(
                 self.spouse_last_name, self.spouse_first_name
             )

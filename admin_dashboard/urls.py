@@ -2,6 +2,8 @@ from django.urls import path
 from admin_dashboard.controllers.views.admin_dashboard.home import main as home_views
 from admin_dashboard.controllers.views.admin_dashboard.accounts import main as accounts_views
 from admin_dashboard.controllers.views.admin_dashboard.profiles import main as profiles_views
+from admin_dashboard.controllers.views.admin_dashboard.loans import main as loans_views
+from admin_dashboard.controllers.views.admin_dashboard.loan_types import main as loan_types_views
 
 urlpatterns = [
     path(
@@ -64,5 +66,61 @@ urlpatterns += [
         'profile/<profile>/delete',
         profiles_views.AdminDashboardProfileDeleteView.as_view(),
         name='admin_dashboard_profiles_delete'
+    )
+]
+
+urlpatterns += [
+    path(
+        'loan/list',
+        loans_views.AdminDashboardLoanListView.as_view(),
+        name='admin_dashboard_loans_list'
+    ),
+    path(
+        'loan/<loan>/detail',
+        loans_views.AdminDashboardLoanDetailView.as_view(),
+        name='admin_dashboard_loans_detail'
+    ),
+    path(
+        'loan/create',
+        loans_views.AdminDashboardLoanCreateView.as_view(),
+        name='admin_dashboard_loans_create'
+    ),
+    path(
+        'loan/<loan>/update',
+        loans_views.AdminDashboardLoanUpdateView.as_view(),
+        name='admin_dashboard_loans_update'
+    ),
+    path(
+        'loan/<loan>/delete',
+        loans_views.AdminDashboardLoanDeleteView.as_view(),
+        name='admin_dashboard_loans_delete'
+    )
+]
+
+urlpatterns += [
+    path(
+        'loan_type/list',
+        loan_types_views.AdminDashboardLoanTypeListView.as_view(),
+        name='admin_dashboard_loan_types_list'
+    ),
+    path(
+        'loan_type/<loan_type>/detail',
+        loan_types_views.AdminDashboardLoanTypeDetailView.as_view(),
+        name='admin_dashboard_loan_types_detail'
+    ),
+    path(
+        'loan_type/create',
+        loan_types_views.AdminDashboardLoanTypeCreateView.as_view(),
+        name='admin_dashboard_loan_types_create'
+    ),
+    path(
+        'loan_type/<loan_type>/update',
+        loan_types_views.AdminDashboardLoanTypeUpdateView.as_view(),
+        name='admin_dashboard_loan_types_update'
+    ),
+    path(
+        'loan_type/<loan_type>/delete',
+        loan_types_views.AdminDashboardLoanTypeDeleteView.as_view(),
+        name='admin_dashboard_loan_types_delete'
     )
 ]

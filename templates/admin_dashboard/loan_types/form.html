@@ -1,0 +1,38 @@
+{% extends 'admin_dashboard/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block header_css %} {% endblock %}
+{% block header_js %} {% endblock %}
+
+{% block page_wrapper_contents %}
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">{{ page_title }}</h2>
+                </div>
+                <div class="card-body">
+                    {% if messages %} {% for m in messages %}
+                        <div class="alert alert-{{ m.tags }}">{{ m }}</div>
+                    {% endfor %} {% endif %}
+                    <form method="post">
+                        {% csrf_token %}
+
+                        {{ form|crispy }}
+                        <p>
+                            <button type="submit" class="btn btn-success animation-on-hover">
+                                Submit
+                            </button>
+                        </p>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

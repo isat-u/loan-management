@@ -14,50 +14,49 @@ from django.views import View
 from django.core.paginator import Paginator
 
 from accounts.mixins.user_type_mixins import IsAdminViewMixin
-from accounts.models.account.constants import USER
 
-from accounts.models.account.models import Account as Master
-from admin_dashboard.controllers.views.admin_dashboard.accounts.forms import AccountForm as MasterForm
+from loans.models.loan_type.models import LoanType as Master
+from admin_dashboard.controllers.views.admin_dashboard.loan_types.forms import LoanTypeForm as MasterForm
 
 """
 URLS
-# Account
+# Loan Type
 
-from admin_dashboard.controllers.views.admin_dashboard.accounts import main as accounts_views
+from admin_dashboard.controllers.views.admin_dashboard.loan_types import main as loan_types_views
 
 urlpatterns += [
     path(
-        'account/list',
-        accounts_views.AdminDashboardAccountListView.as_view(),
-        name='admin_dashboard_accounts_list'
+        'loan_type/list',
+        loan_types_views.AdminDashboardLoanTypeListView.as_view(),
+        name='admin_dashboard_loan_types_list'
     ),
     path(
-        'account/<account>/detail',
-        accounts_views.AdminDashboardAccountDetailView.as_view(),
-        name='admin_dashboard_accounts_detail'
+        'loan_type/<loan_type>/detail',
+        loan_types_views.AdminDashboardLoanTypeDetailView.as_view(),
+        name='admin_dashboard_loan_types_detail'
     ),
     path(
-        'account/create',
-        accounts_views.AdminDashboardAccountCreateView.as_view(),
-        name='admin_dashboard_accounts_create'
+        'loan_type/create',
+        loan_types_views.AdminDashboardLoanTypeCreateView.as_view(),
+        name='admin_dashboard_loan_types_create'
     ),
     path(
-        'account/<account>/update',
-        accounts_views.AdminDashboardAccountUpdateView.as_view(),
-        name='admin_dashboard_accounts_update'
+        'loan_type/<loan_type>/update',
+        loan_types_views.AdminDashboardLoanTypeUpdateView.as_view(),
+        name='admin_dashboard_loan_types_update'
     ),
     path(
-        'account/<account>/delete',
-        accounts_views.AdminDashboardAccountDeleteView.as_view(),
-        name='admin_dashboard_accounts_delete'
+        'loan_type/<loan_type>/delete',
+        loan_types_views.AdminDashboardLoanTypeDeleteView.as_view(),
+        name='admin_dashboard_loan_types_delete'
     )
 ]
 """
 
 
-class AdminDashboardAccountListView(LoginRequiredMixin, IsAdminViewMixin, View):
+class AdminDashboardLoanTypeListView(LoginRequiredMixin, IsAdminViewMixin, View):
     """ 
-    List view for Accounts. 
+    List view for Loan Types. 
     
     Allowed HTTP verbs: 
         - GET
@@ -72,26 +71,26 @@ class AdminDashboardAccountListView(LoginRequiredMixin, IsAdminViewMixin, View):
     """
 
     def get(self, request, *args, **kwargs):
-        obj_list = Master.objects.filter(user_type__in=[USER])
+        obj_list = Master.objects.actives()
         paginator = Paginator(obj_list, 50)
         page = request.GET.get('page')
         objs = paginator.get_page(page)
 
         context = {
-            "page_title": f"Accounts",
+            "page_title": f"Loan Types",
             "menu_section": "admin_dashboard",
-            "menu_subsection": "account",
+            "menu_subsection": "loan_type",
             "menu_action": "list",
             "paginator": paginator,
             "objects": objs
         }
 
-        return render(request, "admin_dashboard/accounts/list.html", context)
+        return render(request, "admin_dashboard/loan_types/list.html", context)
 
 
-class AdminDashboardAccountCreateView(LoginRequiredMixin, IsAdminViewMixin, View):
+class AdminDashboardLoanTypeCreateView(LoginRequiredMixin, IsAdminViewMixin, View):
     """ 
-    Create view for Accounts. 
+    Create view for Loan Types. 
     
     Allowed HTTP verbs: 
         - GET
@@ -109,14 +108,14 @@ class AdminDashboardAccountCreateView(LoginRequiredMixin, IsAdminViewMixin, View
     def get(self, request, *args, **kwargs):
         form = MasterForm
         context = {
-            "page_title": "Create new Account",
+            "page_title": "Create new Loan Type",
             "menu_section": "admin_dashboard",
-            "menu_subsection": "account",
+            "menu_subsection": "loan_type",
             "menu_action": "create",
             "form": form
         }
 
-        return render(request, "admin_dashboard/accounts/form.html", context)
+        return render(request, "admin_dashboard/loan_types/form.html", context)
     
     def post(self, request, *args, **kwargs):
         form = MasterForm(data=request.POST)
@@ -133,17 +132,17 @@ class AdminDashboardAccountCreateView(LoginRequiredMixin, IsAdminViewMixin, View
 
             return HttpResponseRedirect(
                 reverse(
-                    'admin_dashboard_profiles_update',
+                    'admin_dashboard_loan_types_detail',
                     kwargs={
-                        'profile': data.profile.pk
+                        'loan_type': data.pk
                     }
                 )
             )
         else:
             context = {
-                "page_title": "Create new Account",
+                "page_title": "Create new Loan Type",
                 "menu_section": "admin_dashboard",
-                "menu_subsection": "account",
+                "menu_subsection": "loan_type",
                 "menu_action": "create",
                 "form": form
             }
@@ -153,12 +152,12 @@ class AdminDashboardAccountCreateView(LoginRequiredMixin, IsAdminViewMixin, View
                 'There were errors processing your request:',
                 extra_tags='danger'
             )
-            return render(request, "admin_dashboard/accounts/form.html", context)
+            return render(request, "admin_dashboard/loan_types/form.html", context)
 
 
-class AdminDashboardAccountDetailView(LoginRequiredMixin, IsAdminViewMixin, View):
+class AdminDashboardLoanTypeDetailView(LoginRequiredMixin, IsAdminViewMixin, View):
     """ 
-    Create view for Accounts. 
+    Create view for Loan Types. 
     
     Allowed HTTP verbs: 
         - GET
@@ -172,22 +171,21 @@ class AdminDashboardAccountDetailView(LoginRequiredMixin, IsAdminViewMixin, View
     """
 
     def get(self, request, *args, **kwargs):
-        obj = get_object_or_404(Master, pk=kwargs.get('account', None))
-
+        obj = get_object_or_404(Master, pk=kwargs.get('loan_type', None))
         context = {
-            "page_title": f"Account: {obj}",
+            "page_title": f"Loan Type: {obj}",
             "menu_section": "admin_dashboard",
-            "menu_subsection": "account",
+            "menu_subsection": "loan_type",
             "menu_action": "detail",
             "obj": obj
         }
 
-        return render(request, "admin_dashboard/accounts/detail.html", context)
+        return render(request, "admin_dashboard/loan_types/detail.html", context)
 
 
-class AdminDashboardAccountUpdateView(LoginRequiredMixin, IsAdminViewMixin, View):
+class AdminDashboardLoanTypeUpdateView(LoginRequiredMixin, IsAdminViewMixin, View):
     """ 
-    Create view for Accounts. 
+    Create view for Loan Types. 
     
     Allowed HTTP verbs: 
         - GET
@@ -202,22 +200,22 @@ class AdminDashboardAccountUpdateView(LoginRequiredMixin, IsAdminViewMixin, View
     """
 
     def get(self, request, *args, **kwargs):
-        obj = get_object_or_404(Master, pk=kwargs.get('account', None))
+        obj = get_object_or_404(Master, pk=kwargs.get('loan_type', None))
         form = MasterForm(instance=obj)
 
         context = {
-            "page_title": f"Update Account: {obj}",
+            "page_title": f"Update Loan Type: {obj}",
             "menu_section": "admin_dashboard",
-            "menu_subsection": "account",
+            "menu_subsection": "loan_type",
             "menu_action": "update",
             "obj": obj,
             "form": form
         }
 
-        return render(request, "admin_dashboard/accounts/form.html", context)
+        return render(request, "admin_dashboard/loan_types/form.html", context)
     
     def post(self, request, *args, **kwargs):
-        obj = get_object_or_404(Master, pk=kwargs.get('account', None))
+        obj = get_object_or_404(Master, pk=kwargs.get('loan_type', None))
         form = MasterForm(instance=obj, data=request.POST)
 
         if form.is_valid():
@@ -232,17 +230,17 @@ class AdminDashboardAccountUpdateView(LoginRequiredMixin, IsAdminViewMixin, View
 
             return HttpResponseRedirect(
                 reverse(
-                    'admin_dashboard_accounts_detail',
+                    'admin_dashboard_loan_types_detail',
                     kwargs={
-                        'account': data.pk
+                        'loan_type': data.pk
                     }
                 )
             )
         else:
             context = {
-                "page_title": "Update Account: {obj}",
+                "page_title": "Update Loan Type: {obj}",
                 "menu_section": "admin_dashboard",
-                "menu_subsection": "account",
+                "menu_subsection": "loan_type",
                 "menu_action": "update",
                 "obj": obj,
                 "form": form
@@ -253,12 +251,12 @@ class AdminDashboardAccountUpdateView(LoginRequiredMixin, IsAdminViewMixin, View
                 'There were errors processing your request:',
                 extra_tags='danger'
             )
-            return render(request, "admin_dashboard/accounts/form.html", context)
+            return render(request, "admin_dashboard/loan_types/form.html", context)
 
 
-class AdminDashboardAccountDeleteView(LoginRequiredMixin, IsAdminViewMixin, View):
+class AdminDashboardLoanTypeDeleteView(LoginRequiredMixin, IsAdminViewMixin, View):
     """ 
-    Create view for Accounts. 
+    Create view for Loan Types. 
     
     Allowed HTTP verbs: 
         - GET
@@ -273,19 +271,19 @@ class AdminDashboardAccountDeleteView(LoginRequiredMixin, IsAdminViewMixin, View
     """
 
     def get(self, request, *args, **kwargs):
-        obj = get_object_or_404(Master, pk=kwargs.get('account', None))
+        obj = get_object_or_404(Master, pk=kwargs.get('loan_type', None))
         context = {
-            "page_title": f"Delete Account: {obj}",
+            "page_title": f"Delete Loan Type: {obj}",
             "menu_section": "admin_dashboard",
-            "menu_subsection": "account",
+            "menu_subsection": "loan_type",
             "menu_action": "delete",
             "obj": obj
         }
 
-        return render(request, "admin_dashboard/accounts/delete.html", context)
+        return render(request, "admin_dashboard/loan_types/delete.html", context)
     
     def post(self, request, *args, **kwargs):
-        obj = get_object_or_404(Master, pk=kwargs.get('account', None))
+        obj = get_object_or_404(Master, pk=kwargs.get('loan_type', None))
 
         messages.success(
             request,
@@ -297,6 +295,6 @@ class AdminDashboardAccountDeleteView(LoginRequiredMixin, IsAdminViewMixin, View
 
         return HttpResponseRedirect(
             reverse(
-                'admin_dashboard_accounts_list'
+                'admin_dashboard_loan_types_list'
             )
         )

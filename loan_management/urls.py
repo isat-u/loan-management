@@ -55,6 +55,7 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('locations/', include('locations.urls')),
     path('users/', include('users.urls')),
+    path('loans/', include('loans.urls')),
 
     # dashboards
     path('admin/', include('admin_dashboard.urls')),
