@@ -55,4 +55,5 @@ INSTALLED_APPS += [
     'locations',
     'users',
     'loans',
+    'amortizations',
 ]

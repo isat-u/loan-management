@@ -15,6 +15,7 @@ from django.core.paginator import Paginator
 
 from accounts.mixins.user_type_mixins import IsAdminViewMixin
 from accounts.models import Account
+from amortizations.models import Amortization
 from loans.models import LoanType
 from loans.models.loan.constants import LOAN_INTERESTS
 
@@ -124,7 +125,7 @@ class AdminDashboardLoanCreateView(LoginRequiredMixin, IsAdminViewMixin, View):
         }
 
         return render(request, "admin_dashboard/loans/form.html", context)
-    
+
     def post(self, request, *args, **kwargs):
         form = MasterForm(data=request.POST)
 
@@ -138,6 +139,42 @@ class AdminDashboardLoanCreateView(LoginRequiredMixin, IsAdminViewMixin, View):
             data.monthly_interest = loan_details.get('monthly_interest')
             data.created_by = request.user
             data.save()
+
+            # generate amortization
+            amount = data.amount
+            months = data.years * 12
+            ideal_principal = data.amount / months
+            ideal_balance = amount
+            actual_balance = amount
+            actual_monthly_amortization = data.monthly_amortization
+
+            for month in range(months):
+                month += 1
+                ideal_interest = ideal_balance * data.monthly_interest
+                ideal_balance = ideal_balance - ideal_principal
+                ideal_monthly_amortization = ideal_principal + ideal_interest
+                print(
+                    f'{month} - {ideal_principal}, {ideal_interest:.2f}, {ideal_monthly_amortization}, {ideal_balance}')
+
+                actual_interest = actual_balance * data.monthly_interest
+                actual_principal = actual_monthly_amortization - actual_interest
+                actual_balance = actual_balance - actual_principal
+                print(
+                    f'{month} - {actual_principal}, {actual_interest:.2f}, {actual_monthly_amortization}, {actual_balance}')
+                Amortization.objects.create(
+                    month=month,
+                    ideal_principal=ideal_principal,
+                    ideal_interest=ideal_interest,
+                    ideal_monthly_amortization=ideal_monthly_amortization,
+                    ideal_balance=ideal_balance,
+                    actual_principal=actual_principal,
+                    actual_interest=actual_interest,
+                    actual_monthly_amortization=actual_monthly_amortization,
+                    actual_balance=actual_balance,
+                    loan=data,
+                    created_by=request.user
+                )
+
             messages.success(
                 request,
                 f'{data} saved!',
@@ -227,7 +264,7 @@ class AdminDashboardLoanUpdateView(LoginRequiredMixin, IsAdminViewMixin, View):
         }
 
         return render(request, "admin_dashboard/loans/form.html", context)
-    
+
     def post(self, request, *args, **kwargs):
         obj = get_object_or_404(Master, pk=kwargs.get('loan', None))
         form = MasterForm(instance=obj, data=request.POST)
@@ -295,7 +332,7 @@ class AdminDashboardLoanDeleteView(LoginRequiredMixin, IsAdminViewMixin, View):
         }
 
         return render(request, "admin_dashboard/loans/delete.html", context)
-    
+
     def post(self, request, *args, **kwargs):
         obj = get_object_or_404(Master, pk=kwargs.get('loan', None))
 
