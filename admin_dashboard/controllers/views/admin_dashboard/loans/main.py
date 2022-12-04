@@ -14,6 +14,9 @@ from django.views import View
 from django.core.paginator import Paginator
 
 from accounts.mixins.user_type_mixins import IsAdminViewMixin
+from accounts.models import Account
+from loans.models import LoanType
+from loans.models.loan.constants import LOAN_INTERESTS
 
 from loans.models.loan.models import Loan as Master
 from admin_dashboard.controllers.views.admin_dashboard.loans.forms import LoanForm as MasterForm
@@ -106,7 +109,12 @@ class AdminDashboardLoanCreateView(LoginRequiredMixin, IsAdminViewMixin, View):
     """
 
     def get(self, request, *args, **kwargs):
+        account = Account.objects.get(pk=kwargs.get('account', None))
         form = MasterForm
+
+        if account:
+            form = MasterForm(initial={'account': account})
+
         context = {
             "page_title": "Create new Loan",
             "menu_section": "admin_dashboard",
@@ -121,7 +129,13 @@ class AdminDashboardLoanCreateView(LoginRequiredMixin, IsAdminViewMixin, View):
         form = MasterForm(data=request.POST)
 
         if form.is_valid():
+            loan_type = form.cleaned_data['type']
+            loan_years = form.cleaned_data['years'] if form.cleaned_data['years'] is not None else 1
+            loan_details = LOAN_INTERESTS.get(f'{loan_type}')[loan_years]
+
             data = form.save(commit=False)
+            data.yearly_interest = loan_details.get('yearly_interest')
+            data.monthly_interest = loan_details.get('monthly_interest')
             data.created_by = request.user
             data.save()
             messages.success(

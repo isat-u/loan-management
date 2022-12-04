@@ -132,7 +132,7 @@ class AdminDashboardProfileCreateView(LoginRequiredMixin, IsAdminViewMixin, View
 
             return HttpResponseRedirect(
                 reverse(
-                    'admin_dashboard_accounts_detail',
+                    'admin_dashboard_loans_create',
                     kwargs={
                         'account': data.account.pk
                     }

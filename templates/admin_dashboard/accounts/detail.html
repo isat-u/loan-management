@@ -101,12 +101,49 @@
 
     <div class="card">
         <div class="card-header">
+            <h4 class="card-title">Loans</h4>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>Loan Type</th>
+                        <th>Years</th>
+                        <th>Amount</th>
+                        <th class="text-right">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for obj in loans %}
+                        <tr>
+                            <td>{{ obj.type }}</td>
+                            <td>{{ obj.years }}</td>
+                            <td>{{ obj.amount }}</td>
+                            <td class="td-actions text-right">
+                                <a class="btn btn-info btn-sm btn-icon" href="{% url 'admin_dashboard_loans_detail' obj.pk %}">
+                                    <i class="tim-icons icon-badge"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="card">
+        <div class="card-header">
             <h4 class="card-title">Actions</h4>
         </div>
         <div class="card-body">
             <a class="btn btn-info btn-sm btn-icon" href="{% url 'admin_dashboard_accounts_list' %}"
                 title="View List">
                 <i class="tim-icons icon-bullet-list-67"></i>
+            </a>
+            <a class="btn btn-primary btn-sm btn-icon" href="{% url 'admin_dashboard_loans_create' obj.pk %}" title="Add Loan">
+                <i class="tim-icons icon-simple-add"></i>
             </a>
             <a class="btn btn-success btn-sm btn-icon" href="{% url 'admin_dashboard_profiles_update' obj.profile.pk %}" title="Update Profile">
                 <i class="tim-icons icon-single-02"></i>

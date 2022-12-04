@@ -81,7 +81,7 @@ urlpatterns += [
         name='admin_dashboard_loans_detail'
     ),
     path(
-        'loan/create',
+        'loan/<account>/create',
         loans_views.AdminDashboardLoanCreateView.as_view(),
         name='admin_dashboard_loans_create'
     ),

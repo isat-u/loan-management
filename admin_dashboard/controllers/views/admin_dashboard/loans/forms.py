@@ -7,8 +7,11 @@ class LoanForm(forms.ModelForm):
         model = Loan
         fields = [
             'type',
+            'years',
             'savings',
             'amount',
             'maturity',
+            'monthly_amortization',
             'due_date',
+            'account',
         ]

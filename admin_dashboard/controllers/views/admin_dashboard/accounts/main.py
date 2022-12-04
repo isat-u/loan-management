@@ -18,6 +18,7 @@ from accounts.models.account.constants import USER
 
 from accounts.models.account.models import Account as Master
 from admin_dashboard.controllers.views.admin_dashboard.accounts.forms import AccountForm as MasterForm
+from loans.models import Loan
 
 """
 URLS
@@ -173,13 +174,14 @@ class AdminDashboardAccountDetailView(LoginRequiredMixin, IsAdminViewMixin, View
 
     def get(self, request, *args, **kwargs):
         obj = get_object_or_404(Master, pk=kwargs.get('account', None))
-
+        loans = Loan.objects.filter(account=obj)
         context = {
             "page_title": f"Account: {obj}",
             "menu_section": "admin_dashboard",
             "menu_subsection": "account",
             "menu_action": "detail",
-            "obj": obj
+            "obj": obj,
+            "loans": loans,
         }
 
         return render(request, "admin_dashboard/accounts/detail.html", context)

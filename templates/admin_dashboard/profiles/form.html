@@ -35,4 +35,9 @@
 {% endblock %}
 
 {% block scripts %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#id_account').attr("style", "pointer-events: none;");
+        })
+    </script>
 {% endblock %}
