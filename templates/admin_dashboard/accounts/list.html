@@ -30,6 +30,8 @@
                     <thead>
                     <tr>
                         <th>Name</th>
+                        <th>Contact Number</th>
+                        <th>Civil Status</th>
                         <th>User Type</th>
                         <th>Staff</th>
                         <th class="text-right">Actions</th>
@@ -38,7 +40,9 @@
                     <tbody>
                     {% for obj in objects %}
                         <tr>
-                            <td>{{ obj }}</td>
+                            <td>{{ obj.profile.get_full_name }}</td>
+                            <td>{{ obj.profile.contact_number }}</td>
+                            <td>{{ obj.profile.get_civil_status_display }}</td>
                             <td>{{ obj.get_user_type_display }}</td>
                             <td>{{ obj.is_staff }}</td>
                             <td class="td-actions text-right">

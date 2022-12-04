@@ -5,6 +5,8 @@ Description for Loan Management
 Author: Maayon (maayon@gmail.com)
 Version: 0.0.1
 """
+from decimal import Decimal
+
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http import HttpResponseRedirect
@@ -141,22 +143,23 @@ class AdminDashboardLoanCreateView(LoginRequiredMixin, IsAdminViewMixin, View):
             data.save()
 
             # generate amortization
-            amount = data.amount
+            amount = Decimal(data.amount)
             months = data.years * 12
-            ideal_principal = data.amount / months
+            monthly_interest = Decimal(data.monthly_interest)
+            ideal_principal = amount / months
             ideal_balance = amount
             actual_balance = amount
             actual_monthly_amortization = data.monthly_amortization
 
             for month in range(months):
                 month += 1
-                ideal_interest = ideal_balance * data.monthly_interest
+                ideal_interest = ideal_balance * monthly_interest
                 ideal_balance = ideal_balance - ideal_principal
                 ideal_monthly_amortization = ideal_principal + ideal_interest
                 print(
                     f'{month} - {ideal_principal}, {ideal_interest:.2f}, {ideal_monthly_amortization}, {ideal_balance}')
 
-                actual_interest = actual_balance * data.monthly_interest
+                actual_interest = actual_balance * monthly_interest
                 actual_principal = actual_monthly_amortization - actual_interest
                 actual_balance = actual_balance - actual_principal
                 print(
