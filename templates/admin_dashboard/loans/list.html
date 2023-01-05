@@ -30,6 +30,7 @@
                     <thead>
                     <tr>
                         <th>Name</th>
+                        <th>Amount</th>
                         <th class="text-right">Actions</th>
                     </tr>
                     </thead>
@@ -37,6 +38,7 @@
                     {% for obj in objects %}
                         <tr>
                             <td>{{ obj }}</td>
+                            <td>{{ obj.amount }}</td>
                             <td class="td-actions text-right">
                                 <a class="btn btn-info btn-sm btn-icon" href="{% url 'admin_dashboard_loans_detail' obj.pk %}">
                                     <i class="tim-icons icon-badge"></i>

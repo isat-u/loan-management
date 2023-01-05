@@ -27,6 +27,7 @@ django-debug-toolbar===3.4.0
 django-extensions
 django-filter
 django-mathfilters
+django-paypal
 django-phonenumber-field
 django-split-settings
 djangorestframework

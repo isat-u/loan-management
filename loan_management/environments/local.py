@@ -35,7 +35,8 @@ try:
     with open(os.path.join(BASE_DIR, 'SECRET_KEY')) as f:
         SECRET_KEY = f.read().strip()
 except FileNotFoundError:
-    generated_key = ''.join([random.SystemRandom().choice(string.ascii_letters + string.digits + string.punctuation) for _ in range(50)])
+    generated_key = ''.join(
+        [random.SystemRandom().choice(string.ascii_letters + string.digits + string.punctuation) for _ in range(50)])
     secret = open(os.path.join(BASE_DIR, 'SECRET_KEY'), 'w')
     secret.write(generated_key)
     secret.close()
@@ -135,7 +136,7 @@ ACCOUNT_USERNAME_REQUIRED = True
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USER_MODEL_EMAIL_FIELD = 'email'
-TOKEN_LIFETIME = 21600 # 6 hours
+TOKEN_LIFETIME = 21600  # 6 hours
 # LOGIN_REDIRECT_URL = '/accounts/postlogin'
 
 ########################################################################################################################
@@ -264,8 +265,6 @@ MEDIA_URL = f'{SITE_URL}/media/'
 MEDIA_ROOT = '/var/www/html/media/'
 TEMPORARY_MEDIA = '{}temp'.format(MEDIA_ROOT)
 
-
-
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 ########################################################################################################################
@@ -304,3 +303,10 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+########################################################################################################################
+# Paypal
+########################################################################################################################
+PAYPAL_IDENTITY_TOKEN = "RqA9_K6u56_gYv9Q6b1uWu5enylAahmagYsiJ6kbXUllOdROBJ3S2knTVny"
+PAYPAL_RECEIVER_EMAIL = 'icare-facilitator@pilantropo.com'
+PAYPAL_TEST = True
