@@ -23,7 +23,8 @@ INSTALLED_APPS += [
 
 INSTALLED_APPS += [
     'django_extensions',
-    'django_filters'
+    'django_filters',
+    'paypal.standard.ipn',
 ]
 
 INSTALLED_APPS += [
@@ -53,7 +54,7 @@ INSTALLED_APPS += [
     'accounts',
     'profiles',
     'locations',
-    'users',
     'loans',
     'amortizations',
+    'payments',
 ]
