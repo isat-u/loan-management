@@ -23,3 +23,9 @@ class IsAdminViewMixin(AccessMixin):
             return self.handle_no_permission()
         return super().dispatch(request, *args, **kwargs)
 
+
+class IsUserViewMixin(AccessMixin):
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.user_type == USER and not request.user.user_type == SUPERADMIN:
+            return self.handle_no_permission()
+        return super().dispatch(request, *args, **kwargs)

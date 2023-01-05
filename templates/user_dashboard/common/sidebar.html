@@ -1,0 +1,55 @@
+{% load static %}
+<!-- Sidebar -->
+<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+    <!-- Sidebar - Brand -->
+    <a class="sidebar-brand d-flex align-items-center justify-content-center"
+       href="{% url 'user_dashboard_home_view' %}">
+        <div class="sidebar-brand-icon rotate-n-15">
+            <i class="fab fa-flipboard"></i>
+        </div>
+        <div class="sidebar-brand-text mx-3">User</div>
+    </a>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider my-0">
+
+    <!-- Nav Item - Dashboard -->
+    <li class="nav-item {% if menu_subsection == 'user_dashboard' %}active{% endif %}">
+        <a class="nav-link" href="{% url 'user_dashboard_home_view' %}">
+            <i class="fas fa-fw fa-tachometer-alt"></i>
+            <span>Dashboard</span></a>
+    </li>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+    <!-- Heading -->
+    <div class="sidebar-heading">
+        Loan Management System
+    </div>
+
+
+    <!-- Nav Item - Users -->
+    <li class="nav-item {% if menu_subsection == 'loan_type' %}active{% endif %}">
+        <a class="nav-link" href="{% url 'user_dashboard_loans_list' user.pk %}">
+            <i class="fas fa-fw fa-landmark"></i>
+            <span>Loan</span></a>
+    </li>
+
+    <!-- Nav Item - Users -->
+    <li class="nav-item {% if menu_subsection == 'loan_type' %}active{% endif %}">
+        <a class="nav-link" href="{% url 'user_dashboard_payments_list' %}">
+            <i class="fas fa-fw fa-dollar-sign"></i>
+            <span>Payments</span></a>
+    </li>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider d-none d-md-block">
+
+    <!-- Sidebar Toggler (Sidebar) -->
+    <div class="text-center d-none d-md-inline">
+        <button class="rounded-circle border-0" id="sidebarToggle"></button>
+    </div>
+
+</ul>
+<!-- End of Sidebar -->

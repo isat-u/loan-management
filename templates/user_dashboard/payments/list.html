@@ -1,0 +1,60 @@
+{% extends 'user_dashboard/base.html' %}
+{% load static %}
+
+{% block header_css %} {% endblock %}
+{% block header_js %} {% endblock %}
+
+{% block page_wrapper_contents %}
+    <div class="card mb-3">
+        <div class="card-header">
+            <h4 class="card-title float-left">{{ page_title }}</h4>
+        </div>
+        <div class="card-body">
+            <nav aria-label="breadcrumb" role="navigation">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'user_dashboard_home_view' %}">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ page_title }}</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            {% if messages %} {% for m in messages %} 
+                <div class="alert alert-{{ m.tags }}">{{ m }}</div>
+            {% endfor %} {% endif %} 
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th class="text-right">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for obj in objects %}
+                        <tr>
+                            <td>{{ obj }}</td>
+                            <td class="td-actions text-right">
+                                <a class="btn btn-info btn-sm btn-icon" href="{% url 'user_dashboard_payments_detail' obj.pk %}">
+                                    <i class="tim-icons icon-badge"></i>
+                                </a>
+                                <a class="btn btn-success btn-sm btn-icon" href="{% url 'user_dashboard_payments_update' obj.pk %}">
+                                    <i class="tim-icons icon-pencil"></i>
+                                </a>
+                                <a class="btn btn-danger btn-sm btn-icon" href="{% url 'user_dashboard_payments_delete' obj.pk %}">
+                                    <i class="tim-icons icon-simple-remove"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

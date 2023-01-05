@@ -1,0 +1,86 @@
+{% extends 'user_dashboard/base.html' %}
+{% load static %}
+
+{% block header_css %} {% endblock %}
+{% block header_js %} {% endblock %}
+
+{% block page_wrapper_contents %}
+    <div class="card mb-3">
+        <div class="card-header">
+            <h4 class="card-title">{{ page_title }}</h4>
+        </div>
+        <div class="card-body">
+            <nav aria-label="breadcrumb" role="navigation">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'user_dashboard_home_view' %}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'user_dashboard_payments_list' %}">Payments</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ page_title }}</li>
+                </ol>
+            </nav>
+            {% if messages %} {% for m in messages %} 
+                <div class="alert alert-{{ m.tags }} ">{{ m }}</div>
+            {% endfor %} {% endif %}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-category">&nbsp;</h5>
+                    <h2 class="card-title">{{ obj.name }}</h2>
+                </div>
+                <div class="card-body">
+                    <h4 class="card-title">{{ obj.name }}</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">Name</h6>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-category">&nbsp;</h5>
+                    <h2 class="card-title">Status</h2>
+                </div>
+                <div class="card-body">
+                    <h4 class="card-title">
+                        {% if obj.is_active %}
+                            <strong class="text-primary">Active</strong>
+                        {% else %}
+                            <strong class="text-secondary">Inactive</strong>
+                        {% endif %}</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">Status</h6>
+                    <h4 class="card-title">{{ obj.created }}</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">Date Created</h6>
+                    <h4 class="card-title">{{ obj.updated }}</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">Date Last Updated</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Actions</h4>
+        </div>
+        <div class="card-body">
+            <a class="btn btn-info btn-sm btn-icon" href="{% url 'user_dashboard_payments_list' %}"
+                title="View List">
+                <i class="tim-icons icon-bullet-list-67"></i>
+            </a>
+            <a class="btn btn-success btn-sm btn-icon" href="{% url 'user_dashboard_payments_update' obj.pk %}" title="Update Payment">
+                <i class="tim-icons icon-settings"></i>
+            </a>
+            <a class="btn btn-danger btn-sm btn-icon" href="{% url 'user_dashboard_payments_delete' obj.pk %}"
+               title="Delete Payment">
+                <i class="tim-icons icon-simple-remove"></i>
+            </a>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

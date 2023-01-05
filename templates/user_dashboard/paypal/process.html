@@ -1,0 +1,71 @@
+{% extends 'user_dashboard/base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block head_css %}
+{% endblock %}
+
+{% block head_js %}
+{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <div class="row no-gutters">
+      <div class="col-lg-12 col-md-12 col-sm-12 d-flex flex-column justify-content-center align-items-center">
+        <h5 class="align-self-start my-3">Transaction Details :</h5>
+      </div>
+    </div>
+    <div class="row d-flex flex-column justify-content-center align-items-center">
+      <div class="col-lg-4 col-md-4 col-sm-12 d-flex flex-column justify-content-center align-items-center">
+        <div class="card">
+          <div class="card-body">
+              <img class="img-fluid" src="{% static 'media/paypal_logo.png' %}">
+              <div class="text-muted font-italic">{{ membership.name }}</div>
+              <div class="text-muted font-italic">Amount: &#8369;{{ amount|intcomma }}</div>
+              <div class="text-muted font-italic">Vote Credits: {{ vote_credits }}</div>
+            <div class="text-center mt-3">
+              {{ paypal_form.render }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row no-gutters">
+      <div class="col-lg-12 col-md-12 col-sm-12 d-flex flex-column justify-content-center align-items-center mb-5">
+        <h5 class="align-self-start my-5">You can also send your donations through:</h5>
+        <div class="card w-75 m-auto">
+          <div class="card-body">
+            <img class="img-fluid" src="{% static 'media/bpi_logo.png' %}">
+            <p class="m-0 mt-2">ACCOUNT NO: 1591-0080-95 <br> BRANCH: BPI SAVINGS BANK-Alabang Town Center <br> ADDRESS:
+              2/F
+              Madrigal entrance,Alabang Town Center Ayala Alabang, Muntinlupa Metro Manila</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-12 col-md-12 col-sm-12 d-flex flex-column justify-content-center align-items-center mb-5">
+        <div class="card w-75">
+          <div class="card-body">
+            <img class="img-fluid" src="{% static 'media/sv_logo.jpg' %}">
+            <p class="m-0 mt-2">The Genesis Building Pueblo de Panay, Roxas City Capiz Philippines, 5800</p>
+          </div>
+        </div>
+        <p class="text-muted font-italic my-3">
+          Please provide us with your deposit/transaction slip indicating your name, your organization and contact
+          information so that we may acknowledge receipt of your donation.
+        </p>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  <script type="text/javascript">
+    $(document).ready(function () {
+      var image = document.querySelectorAll("input")[12];
+      image.alt = "Donate";
+    });
+
+
+  </script>
+{% endblock %}

@@ -1,0 +1,133 @@
+{% extends 'user_dashboard/base.html' %}
+{% load static %}
+
+{% block head_css %}
+  <style>
+    svg {
+      width: 100px;
+      display: block;
+      margin: 40px auto 0;
+    }
+
+    .path {
+      stroke-dasharray: 1000;
+      stroke-dashoffset: 0;
+    }
+
+    .path.circle {
+      -webkit-animation: dash 0.9s ease-in-out;
+      animation: dash 0.9s ease-in-out;
+    }
+
+    .path.line {
+      stroke-dashoffset: 1000;
+      -webkit-animation: dash 0.9s 0.35s ease-in-out forwards;
+      animation: dash 0.9s 0.35s ease-in-out forwards;
+    }
+
+    .path.check {
+      stroke-dashoffset: -100;
+      -webkit-animation: dash-check 0.9s 0.35s ease-in-out forwards;
+      animation: dash-check 0.9s 0.35s ease-in-out forwards;
+    }
+
+    p {
+      text-align: center;
+      margin: 20px 0 60px;
+      font-size: 1.25em;
+    }
+
+    p.success {
+      color: #FF0068;
+    }
+
+    p.error {
+      color: #D06079;
+    }
+
+    @-webkit-keyframes dash {
+      0% {
+        stroke-dashoffset: 1000;
+      }
+      100% {
+        stroke-dashoffset: 0;
+      }
+    }
+
+    @keyframes dash {
+      0% {
+        stroke-dashoffset: 1000;
+      }
+      100% {
+        stroke-dashoffset: 0;
+      }
+    }
+
+    @-webkit-keyframes dash-check {
+      0% {
+        stroke-dashoffset: -100;
+      }
+      100% {
+        stroke-dashoffset: 900;
+      }
+    }
+
+    @keyframes dash-check {
+      0% {
+        stroke-dashoffset: -100;
+      }
+      100% {
+        stroke-dashoffset: 900;
+      }
+    }
+
+    p {
+      font-size: 1rem;
+    }
+
+    p strong {
+      color: #FF0068;
+    }
+
+    p a {
+      color: #FF0068;
+    }
+  
+    p a:hover {
+      text-decoration: none;
+      color: #E8005C;
+    }
+
+  </style>
+{% endblock %}
+
+{% block head_js %}
+{% endblock %}}
+
+{% block content %}
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-6 col-md-6 col-sm-12">
+        <div class="card">
+          <div class="card-body">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
+              <circle class="path circle" fill="none" stroke="#FF0068" stroke-width="6" stroke-miterlimit="10" cx="65.1"
+                      cy="65.1" r="62.1"/>
+              <line class="path line" fill="none" stroke="#FF0068" stroke-width="6" stroke-linecap="round"
+                    stroke-miterlimit="10" x1="34.4" y1="37.9" x2="95.8" y2="92.3"/>
+              <line class="path line" fill="none" stroke="#FF0068" stroke-width="6" stroke-linecap="round"
+                    stroke-miterlimit="10" x1="95.8" y1="38" x2="34.4" y2="92.2"/>
+            </svg>
+            <p class="text-justify help_panel">Hi {{ user }},<br><br>
+            We noticed that you tried to donate, however the process was not successful.<br>
+            It looks like your payment method may have been declined or canceled.</p>
+            <p>Click this <a href="{% url 'engagement_level_view' %}?payment_source=paypal">link</a> to try again or select our other payment gateway.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

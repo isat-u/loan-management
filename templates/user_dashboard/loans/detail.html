@@ -1,0 +1,89 @@
+{% extends 'user_dashboard/base.html' %}
+{% load static %}
+
+{% block header_css %} {% endblock %}
+{% block header_js %} {% endblock %}
+
+{% block page_wrapper_contents %}
+    <div class="card mb-3">
+        <div class="card-header">
+            <h4 class="card-title">{{ page_title }}</h4>
+        </div>
+        <div class="card-body">
+            <nav aria-label="breadcrumb" role="navigation">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'admin_dashboard_home_view' %}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'admin_dashboard_loans_list' %}">Loans</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ page_title }}</li>
+                </ol>
+            </nav>
+            {% if messages %} {% for m in messages %}
+                <div class="alert alert-{{ m.tags }} ">{{ m }}</div>
+            {% endfor %} {% endif %}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-category">&nbsp;</h5>
+                    <h2 class="card-title">{{ obj.type }}</h2>
+                </div>
+                <div class="card-body">
+                    <h4 class="card-title">{{ obj.amount }}</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">Amount</h6>
+                    <h4 class="card-title">{{ obj.monthly_amortization }}</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">Monthly Amortization</h6>
+                    <h4 class="card-title">{{ obj.years }}</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">Years</h6>
+                    <h4 class="card-title">{{ obj.due_date }}</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">Due Date</h6>
+                    <h4 class="card-title">{{ obj.yearly_percentage }}</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">Yearly Interest</h6>
+                    <h4 class="card-title">{{ obj.monthly_percentage }}</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">Monthly Interest</h6>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-category">&nbsp;</h5>
+                    <h2 class="card-title">Status</h2>
+                </div>
+                <div class="card-body">
+                    <h4 class="card-title">
+                        {% if obj.is_active %}
+                            <strong class="text-primary">Active</strong>
+                        {% else %}
+                            <strong class="text-secondary">Inactive</strong>
+                        {% endif %}</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">Status</h6>
+                    <h4 class="card-title">{{ obj.created }}</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">Date Created</h6>
+                    <h4 class="card-title">{{ obj.updated }}</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">Date Last Updated</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Actions</h4>
+        </div>
+        <div class="card-body">
+            <a class="btn btn-info btn-sm btn-icon" href="{% url 'user_dashboard_loans_list' user.pk %}"
+               title="View List">
+                <i class="tim-icons icon-bullet-list-67"></i>
+            </a>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}
