@@ -44,16 +44,6 @@
                         </button>
                     </form>
                 </div>
-                <div class="container-fluid">
-                    {% if messages %}
-                        {% for message in messages %}
-                            <div class="alert alert-{% if message.tags %}{{ message.tags }}{% endif %}">
-                                {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}ERROR: {% endif %}
-                                {{ message }}
-                            </div>
-                        {% endfor %}
-                    {% endif %}
-                </div>
             </div>
         </div>
     </div>
