@@ -4,6 +4,7 @@ from admin_dashboard.controllers.views.admin_dashboard.accounts import main as a
 from admin_dashboard.controllers.views.admin_dashboard.profiles import main as profiles_views
 from admin_dashboard.controllers.views.admin_dashboard.loans import main as loans_views
 from admin_dashboard.controllers.views.admin_dashboard.loan_types import main as loan_types_views
+from admin_dashboard.controllers.views.admin_dashboard.payment_requests import main as payment_requests_views
 
 urlpatterns = [
     path(
@@ -13,6 +14,7 @@ urlpatterns = [
     ),
 ]
 
+# Account
 urlpatterns += [
     path(
         'account/list',
@@ -41,6 +43,7 @@ urlpatterns += [
     )
 ]
 
+# Profile
 urlpatterns += [
     path(
         'profile/list',
@@ -69,6 +72,7 @@ urlpatterns += [
     )
 ]
 
+# Loan
 urlpatterns += [
     path(
         'loan/list',
@@ -97,6 +101,7 @@ urlpatterns += [
     )
 ]
 
+# Loan Type
 urlpatterns += [
     path(
         'loan_type/list',
@@ -123,4 +128,38 @@ urlpatterns += [
         loan_types_views.AdminDashboardLoanTypeDeleteView.as_view(),
         name='admin_dashboard_loan_types_delete'
     )
+]
+
+# Payment Request
+urlpatterns += [
+    path(
+        'payment_request/list',
+        payment_requests_views.AdminDashboardPaymentRequestListView.as_view(),
+        name='admin_dashboard_payment_requests_list'
+    ),
+    path(
+        'payment_request/<payment_request>/detail',
+        payment_requests_views.AdminDashboardPaymentRequestDetailView.as_view(),
+        name='admin_dashboard_payment_requests_detail'
+    ),
+    path(
+        'payment_request/create',
+        payment_requests_views.AdminDashboardPaymentRequestCreateView.as_view(),
+        name='admin_dashboard_payment_requests_create'
+    ),
+    path(
+        'payment_request/<payment_request>/update',
+        payment_requests_views.AdminDashboardPaymentRequestUpdateView.as_view(),
+        name='admin_dashboard_payment_requests_update'
+    ),
+    path(
+        'payment_request/<payment_request>/delete',
+        payment_requests_views.AdminDashboardPaymentRequestDeleteView.as_view(),
+        name='admin_dashboard_payment_requests_delete'
+    ),
+    path(
+        'payment_request/<payment_request>/complete',
+        payment_requests_views.AdminDashboardPaymentRequestCompleteView.as_view(),
+        name='admin_dashboard_payment_requests_complete'
+    ),
 ]
