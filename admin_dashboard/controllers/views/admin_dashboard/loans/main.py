@@ -9,6 +9,7 @@ from decimal import Decimal
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.db.models import Sum
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
@@ -226,12 +227,14 @@ class AdminDashboardLoanDetailView(LoginRequiredMixin, IsAdminViewMixin, View):
 
     def get(self, request, *args, **kwargs):
         obj = get_object_or_404(Master, pk=kwargs.get('loan', None))
+        total = obj.payment_requests_loan.filter(status='completed').aggregate(Sum('amount')).get('amount__sum', 0.00)
         context = {
             "page_title": f"Loan: {obj}",
             "menu_section": "admin_dashboard",
             "menu_subsection": "loan",
             "menu_action": "detail",
-            "obj": obj
+            "obj": obj,
+            "total": total,
         }
 
         return render(request, "admin_dashboard/loans/detail.html", context)

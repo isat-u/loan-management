@@ -18,7 +18,7 @@
                     <li class="breadcrumb-item active" aria-current="page">{{ page_title }}</li>
                 </ol>
             </nav>
-            {% if messages %} {% for m in messages %} 
+            {% if messages %} {% for m in messages %}
                 <div class="alert alert-{{ m.tags }} ">{{ m }}</div>
             {% endfor %} {% endif %}
         </div>
@@ -105,7 +105,7 @@
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-hover">
+                <table class="table">
                     <thead>
                     <tr>
                         <th>Loan Type</th>
@@ -116,14 +116,45 @@
                     </thead>
                     <tbody>
                     {% for obj in loans %}
-                        <tr>
+                        <tr class="clickable" data-toggle="collapse" id="row={{ obj.pk }}"
+                            data-target="#hidden-row-{{ obj.pk }}">
                             <td>{{ obj.type }}</td>
                             <td>{{ obj.years }}</td>
                             <td>{{ obj.amount }}</td>
                             <td class="td-actions text-right">
-                                <a class="btn btn-info btn-sm btn-icon" href="{% url 'admin_dashboard_loans_detail' obj.pk %}">
+                                <a class="btn btn-info btn-sm btn-icon"
+                                   href="{% url 'admin_dashboard_loans_detail' obj.pk %}">
                                     <i class="tim-icons icon-badge"></i>
                                 </a>
+                            </td>
+                        </tr>
+                        <tr class="collapse" id="hidden-row-{{ obj.pk }}">
+                            <td colspan="4">
+                                {% if obj.payment_requests_loan.all %}
+                                    <table class="table table-borderless table-dark">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Source</th>
+                                                <th>Amount</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                    <tbody>
+                                    {% for payment in obj.payment_requests_loan.all %}
+                                        <tr>
+                                        <td>{{ payment.created }}</td>
+                                        <td>{{ payment.payment_source|title }}</td>
+                                        <td>{{ payment.amount|floatformat:2 }}</td>
+                                        <td>{{ payment.status|title }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                    </table>
+
+                                {% else %}
+                                    No record found
+                                {% endif %}
                             </td>
                         </tr>
                     {% endfor %}
@@ -139,13 +170,15 @@
         </div>
         <div class="card-body">
             <a class="btn btn-info btn-sm btn-icon" href="{% url 'admin_dashboard_accounts_list' %}"
-                title="View List">
+               title="View List">
                 <i class="tim-icons icon-bullet-list-67"></i>
             </a>
-            <a class="btn btn-primary btn-sm btn-icon" href="{% url 'admin_dashboard_loans_create' obj.pk %}" title="Add Loan">
+            <a class="btn btn-primary btn-sm btn-icon" href="{% url 'admin_dashboard_loans_create' obj.pk %}"
+               title="Add Loan">
                 <i class="tim-icons icon-simple-add"></i>
             </a>
-            <a class="btn btn-success btn-sm btn-icon" href="{% url 'admin_dashboard_profiles_update' obj.profile.pk %}" title="Update Profile">
+            <a class="btn btn-success btn-sm btn-icon" href="{% url 'admin_dashboard_profiles_update' obj.profile.pk %}"
+               title="Update Profile">
                 <i class="tim-icons icon-single-02"></i>
             </a>
             <a class="btn btn-danger btn-sm btn-icon" href="{% url 'admin_dashboard_accounts_delete' obj.pk %}"

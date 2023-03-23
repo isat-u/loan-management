@@ -19,6 +19,7 @@ from accounts.models.account.constants import USER
 from accounts.models.account.models import Account as Master
 from admin_dashboard.controllers.views.admin_dashboard.accounts.forms import AccountForm as MasterForm
 from loans.models import Loan
+from payments.models import PaymentRequest
 
 """
 URLS
