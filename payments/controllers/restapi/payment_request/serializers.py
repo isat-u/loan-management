@@ -10,12 +10,25 @@ class PaymentRequestPublicSerializer(serializers.ModelSerializer):
             'id',
         )
 
+
 class PaymentRequestPrivateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Master
         fields = (
             'id',
+            'created',
+            'updated',
+            'phone_number',
+            'uuid',
+            'payment_source',
+            'amount',
+            'currency',
+            'attachment',
+            'status',
+            'is_active',
+            'meta',
         )
+
 
 class PaymentRequestPrivateCreateSerializer(serializers.ModelSerializer):
     class Meta:
@@ -23,6 +36,7 @@ class PaymentRequestPrivateCreateSerializer(serializers.ModelSerializer):
         fields = (
             'id',
         )
+
 
 class PaymentRequestPrivateUpdateSerializer(serializers.ModelSerializer):
     class Meta:

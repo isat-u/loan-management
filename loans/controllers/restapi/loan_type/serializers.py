@@ -10,12 +10,15 @@ class LoanTypePublicSerializer(serializers.ModelSerializer):
             'id',
         )
 
+
 class LoanTypePrivateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Master
         fields = (
             'id',
+            'name',
         )
+
 
 class LoanTypePrivateCreateSerializer(serializers.ModelSerializer):
     class Meta:
@@ -23,6 +26,7 @@ class LoanTypePrivateCreateSerializer(serializers.ModelSerializer):
         fields = (
             'id',
         )
+
 
 class LoanTypePrivateUpdateSerializer(serializers.ModelSerializer):
     class Meta:
