@@ -39,6 +39,7 @@ urlpatterns += [
     )
 ]
 
+# Payment
 urlpatterns += [
     path(
         'payment/list',

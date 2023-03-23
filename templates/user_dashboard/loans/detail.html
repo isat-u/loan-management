@@ -44,6 +44,7 @@
                     <h6 class="card-subtitle mb-2 text-muted">Yearly Interest</h6>
                     <h4 class="card-title">{{ obj.monthly_percentage }}</h4>
                     <h6 class="card-subtitle mb-2 text-muted">Monthly Interest</h6>
+                    {{ total_payment }}
                 </div>
             </div>
         </div>
@@ -71,6 +72,43 @@
         </div>
     </div>
     <hr>
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Actions</h4>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Account</th>
+                        <th>Name</th>
+                        <th>Loan</th>
+                        <th>Loan Amount</th>
+                        <th>Source</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Payment Date</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for obj in obj.payment_requests_loan.all %}
+                        <tr>
+                            <td>{{ obj.account|title }}</td>
+                            <td>{{ obj.account.profile.get_name }}</td>
+                            <td>{{ obj.loan.type.name }}</td>
+                            <td>PHP{{ obj.loan.amount|floatformat:2 }}</td>
+                            <td>{{ obj.payment_source|title }}</td>
+                            <td>{{ obj.currency }}{{ obj.amount|floatformat:2 }}</td>
+                            <td class="font-weight-bold {% if obj.status == 'pending' %}text-warning {% else %}text-primary{% endif %}">{{ obj.status|title }}</td>
+                            <td>{{ obj.created }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
     <div class="card">
         <div class="card-header">
             <h4 class="card-title">Actions</h4>

@@ -81,7 +81,8 @@ class UserDashboardPaymentRequestListView(LoginRequiredMixin, IsUserViewMixin, V
     """
 
     def get(self, request, *args, **kwargs):
-        obj_list = Master.objects.actives()
+        account = request.user
+        obj_list = Master.objects.filter(account=account).actives()
         paginator = Paginator(obj_list, 50)
         page = request.GET.get('page')
         objs = paginator.get_page(page)
@@ -92,7 +93,8 @@ class UserDashboardPaymentRequestListView(LoginRequiredMixin, IsUserViewMixin, V
             "menu_subsection": "payment",
             "menu_action": "list",
             "paginator": paginator,
-            "objects": objs
+            "objects": objs,
+            "account": account
         }
 
         return render(request, "user_dashboard/payments/list.html", context)
@@ -144,16 +146,16 @@ class UserDashboardPaymentRequestCreateView(LoginRequiredMixin, IsUserViewMixin,
             data = form.save(commit=False)
             data.created_by = request.user
 
+            payment_history = PaymentHistory.objects.create(
+                payment_source=data.payment_source,
+                amount=data.amount,
+                loan=data.loan,
+                currency='PHP',
+                account=request.user,
+            )
             # check payment_source
             if data.payment_source == 'paypal':
-                payment_history = PaymentHistory.objects.create(
-                    payment_source=data.payment_source,
-                    amount=data.amount,
-                    loan=data.loan,
-                    currency='PHP',
-                    account=request.user,
-                )
-                invoice = PaymentHistory.objects.get(invoice_number=request.GET.get('invoice'))
+                invoice = payment_history.invoice_number
                 data.invoice = invoice
                 data.save()
 
@@ -193,6 +195,20 @@ class UserDashboardPaymentRequestCreateView(LoginRequiredMixin, IsUserViewMixin,
                 if data.payment_source == 'paypal':
                     return render(request, 'user_dashboard/paypal/process.html', context)
                 return HttpResponseRedirect(next)
+
+            elif data.payment_source == 'cash':
+                invoice = payment_history.invoice_number
+                data.invoice = invoice
+                data.save()
+
+                return HttpResponseRedirect(
+                    reverse(
+                        'user_dashboard_loans_detail',
+                        kwargs={
+                            'loan': payment_history.loan.pk
+                        }
+                    )
+                )
         else:
             context = {
                 "page_title": "Create new Payment",

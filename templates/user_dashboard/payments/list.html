@@ -8,44 +8,61 @@
     <div class="card mb-3">
         <div class="card-header">
             <h4 class="card-title float-left">{{ page_title }}</h4>
+            <a class="btn btn-primary btn-sm float-left ml-2 pt-0 pb-1" href="{% url 'admin_dashboard_payment_requests_create' %}"><i class="tim-icons icon-simple-add"></i></a>
         </div>
         <div class="card-body">
             <nav aria-label="breadcrumb" role="navigation">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{% url 'user_dashboard_home_view' %}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'admin_dashboard_home_view' %}">Home</a></li>
                     <li class="breadcrumb-item active" aria-current="page">{{ page_title }}</li>
                 </ol>
             </nav>
+             <div class="alert alert-info">
+            <h6 class="italic">*** For payments go to <a href="{% url 'user_dashboard_loans_list' account.pk %}">Loan</a> and select the existing loan that you want to transact.</h6>
+            </div>
         </div>
     </div>
 
     <div class="card">
         <div class="card-body">
-            {% if messages %} {% for m in messages %} 
+            {% if messages %} {% for m in messages %}
                 <div class="alert alert-{{ m.tags }}">{{ m }}</div>
-            {% endfor %} {% endif %} 
+            {% endfor %} {% endif %}
             <div class="table-responsive">
                 <table class="table">
                     <thead>
                     <tr>
+                        <th>Payment Date</th>
+                        <th>Account</th>
                         <th>Name</th>
+                        <th>Loan</th>
+                        <th>Loan Amount</th>
+                        <th>Source</th>
+                        <th>Amount</th>
+                        <th>Status</th>
                         <th class="text-right">Actions</th>
                     </tr>
                     </thead>
                     <tbody>
                     {% for obj in objects %}
                         <tr>
-                            <td>{{ obj }}</td>
+                            <td>{{ obj.created|date:"M d, Y" }}</td>
+                            <td>{{ obj.account|title }}</td>
+                            <td>{{ obj.account.profile.get_name }}</td>
+                            <td>{{ obj.loan.type.name }}</td>
+                            <td>PHP{{ obj.loan.amount|floatformat:2 }}</td>
+                            <td>{{ obj.payment_source|title }}</td>
+                            <td>{{ obj.currency }}{{ obj.amount|floatformat:2 }}</td>
+                            <td class="font-weight-bold {% if obj.status == 'pending' %}text-warning {% else %}text-primary{% endif %}">{{ obj.status|title }}</td>
                             <td class="td-actions text-right">
                                 <a class="btn btn-info btn-sm btn-icon" href="{% url 'user_dashboard_payments_detail' obj.pk %}">
                                     <i class="tim-icons icon-badge"></i>
                                 </a>
+                                {% if obj.status == 'pending' %}
                                 <a class="btn btn-success btn-sm btn-icon" href="{% url 'user_dashboard_payments_update' obj.pk %}">
                                     <i class="tim-icons icon-pencil"></i>
                                 </a>
-                                <a class="btn btn-danger btn-sm btn-icon" href="{% url 'user_dashboard_payments_delete' obj.pk %}">
-                                    <i class="tim-icons icon-simple-remove"></i>
-                                </a>
+                                {% endif %}
                             </td>
                         </tr>
                     {% endfor %}

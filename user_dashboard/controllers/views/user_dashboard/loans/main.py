@@ -7,6 +7,7 @@ Version: 0.0.1
 """
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.db.models import Sum
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
@@ -82,7 +83,7 @@ class UserDashboardLoanListView(LoginRequiredMixin, IsUserViewMixin, View):
             "menu_subsection": "loan",
             "menu_action": "list",
             "paginator": paginator,
-            "objects": objs
+            "objects": objs,
         }
 
         return render(request, "user_dashboard/loans/list.html", context)
@@ -172,12 +173,15 @@ class UserDashboardLoanDetailView(LoginRequiredMixin, IsUserViewMixin, View):
 
     def get(self, request, *args, **kwargs):
         obj = get_object_or_404(Master, pk=kwargs.get('loan', None))
+        total_payment = obj.payment_requests_loan.all().annotate(total=Sum('amount'))
+        print(total_payment)
         context = {
             "page_title": f"Loan: {obj}",
             "menu_section": "user_dashboard",
             "menu_subsection": "loan",
             "menu_action": "detail",
-            "obj": obj
+            "obj": obj,
+            "total_payment": total_payment,
         }
 
         return render(request, "user_dashboard/loans/detail.html", context)

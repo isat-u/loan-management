@@ -13,32 +13,36 @@
             <nav aria-label="breadcrumb" role="navigation">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{% url 'user_dashboard_home_view' %}">Home</a></li>
-                    <li class="breadcrumb-item"><a href="{% url 'user_dashboard_payments_list' %}">Payments</a>
+                    <li class="breadcrumb-item"><a href="{% url 'user_dashboard_payments_list' %}">Payment Requests</a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">{{ page_title }}</li>
                 </ol>
             </nav>
-            {% if messages %} {% for m in messages %} 
+            {% if messages %} {% for m in messages %}
                 <div class="alert alert-{{ m.tags }} ">{{ m }}</div>
             {% endfor %} {% endif %}
         </div>
     </div>
 
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-6 mb-4">
             <div class="card">
                 <div class="card-header">
                     <h5 class="card-category">&nbsp;</h5>
-                    <h2 class="card-title">{{ obj.name }}</h2>
+                    <h2 class="card-title">Loan Details</h2>
                 </div>
                 <div class="card-body">
-                    <h4 class="card-title">{{ obj.name }}</h4>
-                    <h6 class="card-subtitle mb-2 text-muted">Name</h6>
+                    <h4 class="card-title">{{ obj.loan.uuid }}</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">Account</h6>
+                    <h4 class="card-title">{{ obj.loan.type.name }}</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">Loan Type</h6>
+                    <h4 class="card-title">{{ obj.loan.amount }}</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">Amount</h6>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-6">
+        <div class="col-md-6 mb-4">
             <div class="card">
                 <div class="card-header">
                     <h5 class="card-category">&nbsp;</h5>
@@ -59,6 +63,50 @@
                 </div>
             </div>
         </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">PHP{{ obj.loan.maturity|floatformat:2 }}</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">Maturity</h6>
+                    <h4 class="card-title">PHP{{ obj.loan.monthly_amortization|floatformat:2 }}</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">Monthly Amortization</h6>
+                    <h4 class="card-title">PHP{{ obj.loan.yearly_interest|floatformat:3 }}</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">Yearly Interest</h6>
+                    <h4 class="card-title">PHP{{ obj.loan.monthly_interest|floatformat:3 }}</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">Monthly Interest</h6>
+                    <h4 class="card-title">{{ obj.loan.years }}</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">Year/s</h6>
+                    <h4 class="card-title">{{ obj.loan.due_date }}</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">Due Date</h6>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-category">&nbsp;</h5>
+                    <h2 class="card-title">Payment Details</h2>
+                </div>
+                <div class="card-body">
+                    <h4 class="card-title">{{ obj.uuid }}</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">Unique Identifier</h6>
+                    <h4 class="card-title">{{ obj.payment_source }}</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">Source</h6>
+                    <h4 class="card-title">{{ obj.currency }}{{ obj.amount }}</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">Amount</h6>
+                    <h4 class="card-title">{{ obj.attachment|default:"No attachment found." }}</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">Attachment</h6>
+                    <h4 class="card-title">{% if obj.status %}
+                            <strong class="text-primary">{{ obj.status|title }}</strong>
+                        {% else %}
+                            <strong class="text-secondary">{{ obj.status|title }}</strong>
+                        {% endif %}</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">Status</h6>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="card">
@@ -70,13 +118,11 @@
                 title="View List">
                 <i class="tim-icons icon-bullet-list-67"></i>
             </a>
-            <a class="btn btn-success btn-sm btn-icon" href="{% url 'user_dashboard_payments_update' obj.pk %}" title="Update Payment">
+            {% if obj.status == 'pending' %}
+            <a class="btn btn-success btn-sm btn-icon" href="{% url 'user_dashboard_payments_update' obj.pk %}" title="Update Payment Request">
                 <i class="tim-icons icon-settings"></i>
             </a>
-            <a class="btn btn-danger btn-sm btn-icon" href="{% url 'user_dashboard_payments_delete' obj.pk %}"
-               title="Delete Payment">
-                <i class="tim-icons icon-simple-remove"></i>
-            </a>
+            {% endif %}
         </div>
     </div>
 
