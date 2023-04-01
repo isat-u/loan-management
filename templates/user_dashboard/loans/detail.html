@@ -1,5 +1,6 @@
 {% extends 'user_dashboard/base.html' %}
 {% load static %}
+{% load humanize %}
 
 {% block header_css %} {% endblock %}
 {% block header_js %} {% endblock %}
@@ -32,9 +33,9 @@
                     <h2 class="card-title">{{ obj.type }}</h2>
                 </div>
                 <div class="card-body">
-                    <h4 class="card-title">{{ obj.amount }}</h4>
+                    <h4 class="card-title">{{ obj.amount|intcomma }}</h4>
                     <h6 class="card-subtitle mb-2 text-muted">Amount</h6>
-                    <h4 class="card-title">{{ obj.monthly_amortization }}</h4>
+                    <h4 class="card-title">{{ obj.monthly_amortization|intcomma }}</h4>
                     <h6 class="card-subtitle mb-2 text-muted">Monthly Amortization</h6>
                     <h4 class="card-title">{{ obj.years }}</h4>
                     <h6 class="card-subtitle mb-2 text-muted">Years</h6>
@@ -62,6 +63,10 @@
                             <strong class="text-secondary">Inactive</strong>
                         {% endif %}</h4>
                     <h6 class="card-subtitle mb-2 text-muted">Status</h6>
+                    <h4 class="card-title">{{ total_payment|intcomma }}</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">Total Payment</h6>
+                    <h4 class="card-title">{{ balance|intcomma }}</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">Balance</h6>
                     <h4 class="card-title">{{ obj.created }}</h4>
                     <h6 class="card-subtitle mb-2 text-muted">Date Created</h6>
                     <h4 class="card-title">{{ obj.updated }}</h4>

@@ -173,15 +173,19 @@ class UserDashboardLoanDetailView(LoginRequiredMixin, IsUserViewMixin, View):
 
     def get(self, request, *args, **kwargs):
         obj = get_object_or_404(Master, pk=kwargs.get('loan', None))
-        total_payment = obj.payment_requests_loan.all().annotate(total=Sum('amount'))
-        print(total_payment)
+        completed_payment = obj.payment_requests_loan.filter(status='completed').aggregate(Sum('amount'))
+
+        total_payment = completed_payment['amount__sum']
+        balance = obj.amount - total_payment
+
         context = {
             "page_title": f"Loan: {obj}",
             "menu_section": "user_dashboard",
             "menu_subsection": "loan",
             "menu_action": "detail",
             "obj": obj,
-            "total_payment": total_payment,
+            "total_payment": round(total_payment, 2),
+            "balance": round(balance, 2),
         }
 
         return render(request, "user_dashboard/loans/detail.html", context)
