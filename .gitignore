@@ -2,6 +2,7 @@
 *.pyc
 .idea/
 .vscode/
+manage.py
 logs/
 venv/
 loan_management/SECRET_KEY
