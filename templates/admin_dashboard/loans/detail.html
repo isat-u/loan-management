@@ -1,6 +1,6 @@
 {% extends 'admin_dashboard/base.html' %}
 {% load static %}
-
+{% load humanize %}
 {% block header_css %} {% endblock %}
 {% block header_js %} {% endblock %}
 
@@ -32,9 +32,9 @@
                     <h2 class="card-title">{{ obj.type }}</h2>
                 </div>
                 <div class="card-body">
-                    <h4 class="card-title">{{ obj.amount }}</h4>
+                    <h4 class="card-title">{{ obj.amount|floatformat:2|intcomma  }}</h4>
                     <h6 class="card-subtitle mb-2 text-muted">Amount</h6>
-                    <h4 class="card-title">{{ obj.monthly_amortization }}</h4>
+                    <h4 class="card-title">{{ obj.monthly_amortization|floatformat:2|intcomma  }}</h4>
                     <h6 class="card-subtitle mb-2 text-muted">Monthly Amortization</h6>
                     <h4 class="card-title">{{ obj.years }}</h4>
                     <h6 class="card-subtitle mb-2 text-muted">Years</h6>
@@ -62,6 +62,10 @@
                             <strong class="text-secondary">Inactive</strong>
                         {% endif %}</h4>
                     <h6 class="card-subtitle mb-2 text-muted">Status</h6>
+                    <h4 class="card-title">{{ total_payment|floatformat:2|intcomma }}</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">Total Payment</h6>
+                    <h4 class="card-title">{{ balance|floatformat:2|intcomma }}</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">Balance</h6>
                     <h4 class="card-title">{{ obj.created }}</h4>
                     <h6 class="card-subtitle mb-2 text-muted">Date Created</h6>
                     <h4 class="card-title">{{ obj.updated }}</h4>
@@ -82,7 +86,7 @@
                     <tr>
                         <th>Date</th>
                         <th>Source</th>
-                        <th>Amount</th>
+                        <th class="text-right">Amount</th>
                         <th>Status</th>
                     </tr>
                     </thead>
@@ -92,7 +96,7 @@
                         <tr>
                             <td>{{ payment.created }}</td>
                             <td>{{ payment.payment_source|title }}</td>
-                            <td>{{ payment.amount|floatformat:2 }}</td>
+                            <td class="text-right">{{ payment.amount|floatformat:2|intcomma  }}</td>
                             <td>{{ payment.status|title }}</td>
                         </tr>
                     {% endfor %}
@@ -101,7 +105,7 @@
                     {% endif %}
                     <tr>
                         <td colspan="3" class="align-right">Total</td>
-                        <td class="bold">{{ total|floatformat:2 }}</td>
+                        <td class="bold">{{ total_payment|floatformat:2|intcomma  }}</td>
                     </tr>
                     </tbody>
                 </table>

@@ -12,6 +12,5 @@ class LoanForm(forms.ModelForm):
             'amount',
             'maturity',
             'monthly_amortization',
-            'due_date',
             'account',
         ]

@@ -42,6 +42,12 @@
             <span>Users</span></a>
     </li>
     <!-- Nav Item - Users -->
+    <li class="nav-item {% if menu_subsection == 'account' %}active{% endif %}">
+        <a class="nav-link" href="{% url 'admin_dashboard_loans_list' %}">
+            <i class="fas fa-fw fa-hand-holding-unordered_list"></i>
+            <span>Loans</span></a>
+    </li>
+    <!-- Nav Item - Users -->
     <li class="nav-item {% if menu_subsection == 'loan_type' %}active{% endif %}">
         <a class="nav-link" href="{% url 'admin_dashboard_loan_types_list' %}">
             <i class="fas fa-fw fa-landmark"></i>

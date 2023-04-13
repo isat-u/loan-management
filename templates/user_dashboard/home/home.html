@@ -1,55 +1,203 @@
-{% extends 'user_dashboard/base.html' %}
-{% load static %}
-
-{% block header_css %} {% endblock %}
-{% block header_js %} {% endblock %}
-
+{% extends 'user_dashboard/base.html' %} 
+{% load static %} 
+{% load humanize %}
+{% block header_css%} 
+{% endblock %} 
+{% block header_js %} 
+{% endblock %} 
 {% block page_wrapper_contents %}
-    <div class="row">
-        <div class="col-md-4 col-sm-4">
-            <div class="card shadow mb-4">
-                <div class="card-header py-4">
-                    <h6 class="m-0 font-weight-bold text-primary">
-                        <a href="{% url 'admin_dashboard_accounts_list' %}">Users Count</a>
-                        <button class="btn btn-danger rounded-circle px-2 py-0 float-right"
-                                title="Inactive">{% if users.inactives.count %}{{ users.inactive.count }}{% else %}0{% endif %}</button>
-                        <button class="btn btn-success rounded-circle px-2 py-0 float-right mr-1"
-                                title="Active">{{ users.actives.count }}</button>
-                    </h6>
-                </div>
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Count</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ users.count }}</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-users fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<div class="row">
+  <div class="col-md-12 col-sm-12">
+    <div class="card shadow mb-4">
+      <div class="card-header py-4">
+        <h6 class="m-0 font-weight-bold text-primary">
+          <a href="{% url 'admin_dashboard_accounts_list' %}"
+            >Profile Details</a
+          >
+        </h6>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <p class="col"><strong>Name:</strong> {{user.profile.get_name}}</p>
+          <p class="col"><strong>Email:</strong> {{user.email}}</p>
+        </div>
+        <div class="row">
+          <p class="col"><strong>Contact Number:</strong> {{user.profile.contact_number}}</p>
+          <p class="col"><strong>Date of Birth:</strong> {{user.profile.date_of_birth}}</p>
+        </div>
+        <div class="row">
+          <p class="col"><strong>Address:</strong> {{user.profile.address}}</p>
+        </div>
+        <div class="row">
+            <p class="col"><strong>Region:</strong> {{user.profile.region}}</p>
+            <p class="col"><strong>Province:</strong> {{user.profile.province}}</p>
+            <p class="col"><strong>City:</strong> {{user.profile.city}}</p>
+        </div>
+        <div class="row">
+            <p class="col"><strong>Salary:</strong> {{user.profile.monthly_salary}}</p>
+        </div>
+        <div class="row">
+            <p class="col"><strong>Spouse:</strong> {{user.profile.get_spouse_full_name}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-12 col-sm-12">
+    <div class="card shadow mb-4">
+      <div class="card-header py-4">
+        <h6 class="m-0 font-weight-bold text-primary">
+          <a href="{% url 'admin_dashboard_accounts_list' %}"
+            >Loans</a
+          >
+        </h6>
+      </div>
+      <div class="card-body">
+
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                <tr>
+                        <th colspan="3">Loans Taken</th>
+                    </tr>
+                <tr>
+                    <th>Name</th>
+                    <th>Amount</th>
+                    <th class="text-right">Actions</th>
+                </tr>
+                </thead>
+                <tbody id="loan-table">
+
+                </tbody>
+            </table>
         </div>
     </div>
+    </div>
+  </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Loan Computation</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          ...
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<!-- Datatables -->
+<script type="text/javascript">
+  $(document).ready(function () {
+    $('.datatable').DataTable({
+      bFilter: false,
+      bLengthChange: false,
+      pageLength: 10,
+    });
+  });
+</script>
+<!-- /Datatables -->
+
+<script type="text/javascript">
+  $(document).ready(function () {});
+</script>
 {% endblock %}
 
 {% block scripts %}
-
-    <!-- Datatables -->
     <script type="text/javascript">
         $(document).ready(function () {
-            $('.datatable').DataTable({
-                bFilter: false,
-                bLengthChange: false,
-                pageLength: 10,
+            const url = `{% url 'user_loans' %}?account={{ user.pk }}`
+            $.get(url, function(data, status) {
+                let tableData = '';
+                $.each(data.results, function(index, value) {
+                    console.log(value);
+                    let updateUrl = "{% url 'user_dashboard_loans_detail' 0 %}".replace(/0/, value.id);
+                    let paymentUrl = "{% url 'user_dashboard_payments_create' 0 1 %}".replace(/0/, {{user.pk}}).replace(/1/, value.id);
+                    tableData = tableData + `
+                        <tr>
+                            <td>${value.type.name}</td>
+                            <td>${value.amount}</td>
+                            <td class="td-actions text-right">
+                                <a class="btn btn-info btn-sm btn-icon"
+                                   href="${updateUrl}" title="View Details">
+                                    <i class="tim-icons icon-badge"></i>
+                                </a>
+                                <button type="button" class="btn btn-sm btn-secondary btn-icon" title="computation" data-toggle="modal" data-target="#exampleModal" onclick="showModalContent(this)" data-amount="${value.amount}" data-monthly-interest="${value.monthly_interest}" data-monthly-amortization="${value.monthly_amortization}" data-years="${value.years}">
+                                  <i class="tim-icons icon-book-bookmark"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                $('#loan-table').empty().append(tableData);
             });
-        });
-    </script>
-    <!-- /Datatables -->
 
-    <script type="text/javascript">
-        $(document).ready(function () {
 
         });
+
+        function showModalContent(button) {
+            let amount = button.dataset.amount;
+            let monthlyInterest = button.dataset.monthlyInterest;
+            let monthlyAmortization = button.dataset.monthlyAmortization;
+            let years = button.dataset.years;
+            let months = years * 12;
+            let tableRows = '';
+            let principal = parseFloat(amount);
+            let balance =  parseFloat(amount);
+            var modalBody = document.querySelector('.modal-body');
+
+            for (var i = 1; i <= months; i++) {
+                let interest = balance * monthlyInterest;
+                if(i === 1) {
+                    interest = 0;
+                    monthlyAmortization = 0;
+                } else {
+                    principal = amount / months;
+                    monthlyAmortization = principal + interest;
+                    balance -= principal;
+                }
+                tableRows = tableRows + `
+                    <tr>
+                        <td>${i}</td>
+                        <td>${principal.toLocaleString('en-PH', { style: 'currency', currency: 'PHP'})}</td>
+                        <td>${interest.toLocaleString('en-PH', { style: 'currency', currency: 'PHP'})}</td>
+                        <td>${monthlyAmortization.toLocaleString('en-PH', { style: 'currency', currency: 'PHP'})}</td>
+                        <td>${balance.toLocaleString('en-PH', { style: 'currency', currency: 'PHP'})}</td>
+                    </tr>
+                `;
+            }
+            data = `
+            <table class="table">
+                <thead>
+                <tr>
+                    <td colspan="5" class="text-center">IDEAL</td>
+                </tr>
+                <tr>
+                    <th>Month</th>
+                    <th>Principal</th>
+                    <th>Interest</th>
+                    <th>Monthly Amortization</th>
+                    <th>Balance</th>
+                </tr>
+                </thead>
+                <tbody>
+                    ${tableRows}
+                </tbody>
+            </table>
+            `
+            modalBody.innerHTML = data;
+        }
     </script>
 {% endblock %}

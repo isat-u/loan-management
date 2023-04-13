@@ -5,6 +5,7 @@ Description for Loan Management
 Author: Maayon (maayon@gmail.com)
 Version: 0.0.1
 """
+from datetime import date
 from decimal import Decimal
 
 from django.contrib import messages
@@ -78,7 +79,7 @@ class AdminDashboardLoanListView(LoginRequiredMixin, IsAdminViewMixin, View):
     """
 
     def get(self, request, *args, **kwargs):
-        obj_list = Master.objects.actives()
+        obj_list = Master.objects.all()
         paginator = Paginator(obj_list, 50)
         page = request.GET.get('page')
         objs = paginator.get_page(page)
@@ -140,6 +141,7 @@ class AdminDashboardLoanCreateView(LoginRequiredMixin, IsAdminViewMixin, View):
             data = form.save(commit=False)
             data.yearly_interest = loan_details.get('yearly_interest')
             data.monthly_interest = loan_details.get('monthly_interest')
+            data.due_date = date.today()
             data.created_by = request.user
             data.save()
 
@@ -227,14 +229,18 @@ class AdminDashboardLoanDetailView(LoginRequiredMixin, IsAdminViewMixin, View):
 
     def get(self, request, *args, **kwargs):
         obj = get_object_or_404(Master, pk=kwargs.get('loan', None))
-        total = obj.payment_requests_loan.filter(status='completed').aggregate(Sum('amount')).get('amount__sum', 0.00)
+        completed_payment = obj.payment_requests_loan.filter(status='completed').aggregate(Sum('amount'))
+
+        total_payment = completed_payment['amount__sum']
+        balance = obj.amount - total_payment
         context = {
             "page_title": f"Loan: {obj}",
             "menu_section": "admin_dashboard",
             "menu_subsection": "loan",
             "menu_action": "detail",
             "obj": obj,
-            "total": total,
+            "total_payment": total_payment,
+            "balance": balance,
         }
 
         return render(request, "admin_dashboard/loans/detail.html", context)
@@ -349,6 +355,53 @@ class AdminDashboardLoanDeleteView(LoginRequiredMixin, IsAdminViewMixin, View):
         )
 
         obj.delete()
+
+        return HttpResponseRedirect(
+            reverse(
+                'admin_dashboard_loans_list'
+            )
+        )
+
+
+class AdminDashboardLoanApproveView(LoginRequiredMixin, IsAdminViewMixin, View):
+    """ 
+    Create view for Loans. 
+    
+    Allowed HTTP verbs: 
+        - GET
+        - POST
+    
+    Restrictions:
+        - LoginRequired
+        - Admin user
+
+    Filters:
+        - pk = kwargs.get('pk')
+    """
+
+    def get(self, request, *args, **kwargs):
+        obj = get_object_or_404(Master, pk=kwargs.get('loan', None))
+        context = {
+            "page_title": f"Approve Loan: {obj}",
+            "menu_section": "admin_dashboard",
+            "menu_subsection": "loan",
+            "menu_action": "approve",
+            "obj": obj
+        }
+
+        return render(request, "admin_dashboard/loans/approve.html", context)
+
+    def post(self, request, *args, **kwargs):
+        obj = get_object_or_404(Master, pk=kwargs.get('loan', None))
+
+        messages.success(
+            request,
+            f'{obj} approved!',
+            extra_tags='success'
+        )
+
+        obj.is_active = True
+        obj.save()
 
         return HttpResponseRedirect(
             reverse(

@@ -1,5 +1,6 @@
 {% extends 'admin_dashboard/base.html' %}
 {% load static %}
+{% load humanize %}
 
 {% block header_css %} {% endblock %}
 {% block header_js %} {% endblock %}
@@ -28,12 +29,10 @@
         <div class="col-md-6 my-2">
             <div class="card">
                 <div class="card-header">
-                    <h5 class="card-category">&nbsp;</h5>
-                    <h2 class="card-title">Details</h2>
+                    <h5 class="card-category">{{ obj.profile.account.email }}</h5>
+                    <h2 class="card-title">{{ obj.profile.get_name}}</h2>
                 </div>
                 <div class="card-body">
-                    <h4 class="card-title">{{ obj.profile.get_name }}</h4>
-                    <h6 class="card-subtitle mb-2 text-muted">Name</h6>
                     <h4 class="card-title">{{ obj.profile.contact_number }}</h4>
                     <h6 class="card-subtitle mb-2 text-muted">Contact Number</h6>
                     <h4 class="card-title">{{ obj.profile.get_civil_status_display }}</h4>
@@ -111,53 +110,65 @@
                         <th>Loan Type</th>
                         <th>Years</th>
                         <th>Amount</th>
+                        <th>Status</th>
                         <th class="text-right">Actions</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {% for obj in loans %}
-                        <tr class="clickable" data-toggle="collapse" id="row={{ obj.pk }}"
-                            data-target="#hidden-row-{{ obj.pk }}">
-                            <td>{{ obj.type }}</td>
-                            <td>{{ obj.years }}</td>
-                            <td>{{ obj.amount }}</td>
-                            <td class="td-actions text-right">
-                                <a class="btn btn-info btn-sm btn-icon"
-                                   href="{% url 'admin_dashboard_loans_detail' obj.pk %}">
-                                    <i class="tim-icons icon-badge"></i>
-                                </a>
-                            </td>
-                        </tr>
-                        <tr class="collapse" id="hidden-row-{{ obj.pk }}">
-                            <td colspan="4">
-                                {% if obj.payment_requests_loan.all %}
-                                    <table class="table table-borderless table-dark">
-                                        <thead>
+                    {% if loans %}
+                        {% for obj in loans %}
+                            <tr class="clickable" data-toggle="collapse" id="row={{ obj.pk }}"
+                                data-target="#hidden-row-{{ obj.pk }}">
+                                <td>{{ obj.type }}</td>
+                                <td>{{ obj.years }}</td>
+                                <td>{{ obj.amount|floatformat:2|intcomma }}</td>
+                                <td>{% if obj.is_active %} Active {% else %} Inactive {% endif %}</td>
+                                <td class="td-actions text-right">
+                                    <a class="btn btn-info btn-sm btn-icon"
+                                    href="{% url 'admin_dashboard_loans_detail' obj.pk %}">
+                                        <i class="tim-icons icon-badge"></i>
+                                    </a>
+                                    <a class="btn btn-primary btn-sm btn-icon"
+                                    href="{% url 'admin_dashboard_payment_requests_create' obj.account.pk obj.pk %}" title="Pay"><i
+                                            class="tim-icons icon-money-coins"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr class="collapse" id="hidden-row-{{ obj.pk }}">
+                                <td colspan="4">
+                                    {% if obj.payment_requests_loan.all %}
+                                        <table class="table table-borderless table-dark">
+                                            <thead>
+                                                <tr>
+                                                    <th>Date</th>
+                                                    <th>Source</th>
+                                                    <th>Amount</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                            </thead>
+                                        <tbody>
+                                        {% for payment in obj.payment_requests_loan.all %}
                                             <tr>
-                                                <th>Date</th>
-                                                <th>Source</th>
-                                                <th>Amount</th>
-                                                <th>Status</th>
+                                            <td>{{ payment.created }}</td>
+                                            <td>{{ payment.payment_source|title }}</td>
+                                            <td>{{ payment.amount|floatformat:2 }}</td>
+                                            <td>{{ payment.status|title }}</td>
                                             </tr>
-                                        </thead>
-                                    <tbody>
-                                    {% for payment in obj.payment_requests_loan.all %}
-                                        <tr>
-                                        <td>{{ payment.created }}</td>
-                                        <td>{{ payment.payment_source|title }}</td>
-                                        <td>{{ payment.amount|floatformat:2 }}</td>
-                                        <td>{{ payment.status|title }}</td>
-                                        </tr>
-                                    {% endfor %}
-                                    </tbody>
-                                    </table>
+                                        {% endfor %}
+                                        </tbody>
+                                        </table>
 
-                                {% else %}
-                                    No record found
-                                {% endif %}
-                            </td>
+                                    {% else %}
+                                        No record found
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="4" class="text-center">No record found</td>
                         </tr>
-                    {% endfor %}
+                    {% endif %}
                     </tbody>
                 </table>
             </div>

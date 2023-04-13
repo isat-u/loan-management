@@ -43,14 +43,13 @@ class ApiPrivateLoanViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         filters = {
-            'is_active': True
         }
         if 'id' in self.request.GET:
             filters['id'] = self.request.GET.get('id')
 
         if 'account' in self.request.GET:
-            filters['account'] = self.request.GET.get('account')
-
+            filters['account__id'] = self.request.GET.get('account')
+        print(filters)
         return self.model.objects.filter(**filters)
     
     @swagger_auto_schema(operation_description="Create Loan", request_body="CreateSerializer")

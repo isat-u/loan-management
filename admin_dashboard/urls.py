@@ -98,6 +98,11 @@ urlpatterns += [
         'loan/<loan>/delete',
         loans_views.AdminDashboardLoanDeleteView.as_view(),
         name='admin_dashboard_loans_delete'
+    ),
+    path(
+        'loan/<loan>/approve',
+        loans_views.AdminDashboardLoanApproveView.as_view(),
+        name='admin_dashboard_loans_approve'
     )
 ]
 
@@ -143,7 +148,7 @@ urlpatterns += [
         name='admin_dashboard_payment_requests_detail'
     ),
     path(
-        'payment_request/create',
+        'payment_request/<account>/<loan>/create',
         payment_requests_views.AdminDashboardPaymentRequestCreateView.as_view(),
         name='admin_dashboard_payment_requests_create'
     ),

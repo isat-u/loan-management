@@ -13,8 +13,8 @@
         <div class="card-body">
             <nav aria-label="breadcrumb" role="navigation">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{% url 'admin_dashboard_home_view' %}">Home</a></li>
-                    <li class="breadcrumb-item"><a href="{% url 'admin_dashboard_loans_list' %}">Loans</a>
+                    <li class="breadcrumb-item"><a href="{% url 'user_dashboard_home_view' %}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'user_dashboard_loans_list' user.pk %}">Loans</a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">{{ page_title }}</li>
                 </ol>
@@ -96,6 +96,7 @@
                     </tr>
                     </thead>
                     <tbody>
+                    {% if obj.payment_requests_loan.all %}
                     {% for obj in obj.payment_requests_loan.all %}
                         <tr>
                             <td>{{ obj.account|title }}</td>
@@ -108,6 +109,11 @@
                             <td>{{ obj.created }}</td>
                         </tr>
                     {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="8" class="text-center">No records found.</td>
+                        </tr>
+                    {% endif %}
                     </tbody>
                 </table>
             </div>

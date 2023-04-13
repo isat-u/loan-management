@@ -6,6 +6,10 @@ PAYMENT_SOURCES = (
     ('paypal', 'PayPal'),
 )
 
+CASH_ONLY = (
+    ('cash', 'Cash'),
+)
+
 CURRENCY_CHOICES = (
     ('PHP', 'Philippine Peso'),
 )

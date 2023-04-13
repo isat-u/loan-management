@@ -14,6 +14,8 @@ from django.views import View
 from django.core.paginator import Paginator
 
 from accounts.mixins.user_type_mixins import IsAdminViewMixin
+from accounts.models.account.models import Account
+from loans.models.loan.models import Loan
 
 from payments.models.payment_request.models import PaymentRequest as Master, PaymentRequest
 from admin_dashboard.controllers.views.admin_dashboard.payment_requests.forms import PaymentRequestForm as MasterForm
@@ -106,7 +108,16 @@ class AdminDashboardPaymentRequestCreateView(LoginRequiredMixin, IsAdminViewMixi
     """
 
     def get(self, request, *args, **kwargs):
-        form = MasterForm
+        account_pk = kwargs.get('account', None)
+        loan_pk = kwargs.get('loan', None)
+
+        if account_pk and loan_pk:
+            account = Account.objects.get(pk=account_pk)
+            loan = Loan.objects.get(pk=loan_pk)
+            form = MasterForm(initial={'account': account, 'loan': loan})
+        else:
+            form = MasterForm
+
         context = {
             "page_title": "Create new Payment Request",
             "menu_section": "admin_dashboard",

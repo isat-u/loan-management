@@ -196,7 +196,7 @@ class UserDashboardPaymentRequestCreateView(LoginRequiredMixin, IsUserViewMixin,
                     return render(request, 'user_dashboard/paypal/process.html', context)
                 return HttpResponseRedirect(next)
 
-            elif data.payment_source == 'cash':
+            elif data.payment_source == 'cash' or data.payment_source == 'gcash':
                 invoice = payment_history.invoice_number
                 data.invoice = invoice
                 data.save()

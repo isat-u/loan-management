@@ -8,7 +8,6 @@
     <div class="card mb-3">
         <div class="card-header">
             <h4 class="card-title float-left">{{ page_title }}</h4>
-            <a class="btn btn-primary btn-sm float-left ml-2 pt-0 pb-1" href="{% url 'admin_dashboard_payment_requests_create' %}"><i class="tim-icons icon-simple-add"></i></a>
         </div>
         <div class="card-body">
             <nav aria-label="breadcrumb" role="navigation">
@@ -52,8 +51,11 @@
                             <td>{{ obj.currency }}{{ obj.amount|floatformat:2 }}</td>
                             <td class="font-weight-bold {% if obj.status == 'pending' %}text-warning {% else %}text-primary{% endif %}">{{ obj.status|title }}</td>
                             <td class="td-actions text-right">
-                                <a class="btn btn-info btn-sm btn-icon" href="{% url 'admin_dashboard_payment_requests_detail' obj.pk %}">
+                                <a class="btn btn-info btn-sm btn-icon" href="{% url 'admin_dashboard_payment_requests_detail' obj.pk %}" title="Details">
                                     <i class="tim-icons icon-badge"></i>
+                                </a>
+                                <a class="btn btn-primary btn-sm btn-icon" href="{% url 'admin_dashboard_payment_requests_update' obj.pk %}" title="Update">
+                                    <i class="tim-icons icon-pencil"></i>
                                 </a>
                             </td>
                         </tr>

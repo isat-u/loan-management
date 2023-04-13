@@ -7,9 +7,8 @@
 {% block page_wrapper_contents %}
     <div class="card mb-3">
         <div class="card-header">
-            <h4 class="card-title float-left">{{ page_title }}</h4>
-            <a class="btn btn-primary btn-sm float-left ml-2 pt-0 pb-1"
-               href="{% url 'user_dashboard_loans_create' %}"><i class="tim-icons icon-simple-add"></i></a>
+            <a class="btn btn-primary btn-sm float-left ml-2 py-1"
+               href="{% url 'user_dashboard_loans_create' %}"><i class="tim-icons icon-simple-add"></i> Apply Loan</a>
         </div>
         <div class="card-body">
             <nav aria-label="breadcrumb" role="navigation">
@@ -29,6 +28,9 @@
             <div class="table-responsive">
                 <table class="table">
                     <thead>
+                    <tr>
+                            <th colspan="3">Loans Taken</th>
+                        </tr>
                     <tr>
                         <th>Name</th>
                         <th>Amount</th>
@@ -70,9 +72,11 @@
         $(document).ready(function () {
             const url = `{% url 'user_loans' %}?account={{ user.pk }}`
             $.get(url, function(data, status) {
+                console.log(data);
+                console.log({{user.pk}});
+
                 let tableData = '';
                 $.each(data.results, function(index, value) {
-                    console.log(value);
                     let updateUrl = "{% url 'user_dashboard_loans_detail' 0 %}".replace(/0/, value.id);
                     let paymentUrl = "{% url 'user_dashboard_payments_create' 0 1 %}".replace(/0/, {{user.pk}}).replace(/1/, value.id);
                     tableData = tableData + `

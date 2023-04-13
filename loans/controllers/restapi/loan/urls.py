@@ -44,7 +44,3 @@ urlpatterns = [
         name='api_private_loan_delete'
     ),
 ]
-
-"""
-Add to urls.py urlpatterns:
-    path('loan/api/', include('loans.controllers.restapi.loan.urls'))

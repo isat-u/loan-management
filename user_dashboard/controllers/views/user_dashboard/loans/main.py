@@ -15,6 +15,7 @@ from django.views import View
 from django.core.paginator import Paginator
 
 from accounts.mixins.user_type_mixins import IsUserViewMixin
+from accounts.models.account.models import Account
 
 from loans.models.loan.models import Loan as Master
 from user_dashboard.controllers.views.user_dashboard.loans.forms import LoanForm as MasterForm
@@ -72,7 +73,9 @@ class UserDashboardLoanListView(LoginRequiredMixin, IsUserViewMixin, View):
     """
 
     def get(self, request, *args, **kwargs):
-        obj_list = Master.objects.filter(account=kwargs.get('account', None))
+        print(kwargs.get('account', None))
+        obj_list = Master.objects.filter(account__pk=kwargs.get('account', None))
+        print(obj_list)
         paginator = Paginator(obj_list, 50)
         page = request.GET.get('page')
         objs = paginator.get_page(page)
@@ -120,9 +123,10 @@ class UserDashboardLoanCreateView(LoginRequiredMixin, IsUserViewMixin, View):
     
     def post(self, request, *args, **kwargs):
         form = MasterForm(data=request.POST)
-
         if form.is_valid():
             data = form.save(commit=False)
+            data.account = request.user
+            data.is_active = False
             data.created_by = request.user
             data.save()
             messages.success(
@@ -176,7 +180,10 @@ class UserDashboardLoanDetailView(LoginRequiredMixin, IsUserViewMixin, View):
         completed_payment = obj.payment_requests_loan.filter(status='completed').aggregate(Sum('amount'))
 
         total_payment = completed_payment['amount__sum']
-        balance = obj.amount - total_payment
+        if total_payment:
+            balance = obj.amount - total_payment
+        else:
+            balance = obj.amount
 
         context = {
             "page_title": f"Loan: {obj}",
@@ -184,8 +191,8 @@ class UserDashboardLoanDetailView(LoginRequiredMixin, IsUserViewMixin, View):
             "menu_subsection": "loan",
             "menu_action": "detail",
             "obj": obj,
-            "total_payment": round(total_payment, 2),
-            "balance": round(balance, 2),
+            "total_payment": total_payment,
+            "balance": balance,
         }
 
         return render(request, "user_dashboard/loans/detail.html", context)
