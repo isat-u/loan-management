@@ -12,6 +12,7 @@ from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.views import View
 from django.core.paginator import Paginator
+from django.db import IntegrityError
 
 from accounts.mixins.user_type_mixins import IsAdminViewMixin
 from accounts.models.account.constants import USER
@@ -124,23 +125,44 @@ class AdminDashboardAccountCreateView(LoginRequiredMixin, IsAdminViewMixin, View
         form = MasterForm(data=request.POST)
 
         if form.is_valid():
-            data = form.save(commit=False)
-            data.created_by = request.user
-            data.save()
-            messages.success(
-                request,
-                f'{data} saved!',
-                extra_tags='success'
-            )
-
-            return HttpResponseRedirect(
-                reverse(
-                    'admin_dashboard_profiles_update',
-                    kwargs={
-                        'profile': data.profile.pk
-                    }
+            # data = form.save(commit=False)
+            # data.created_by = request.user
+            # data.save()
+            try:
+                user = Master.objects.create_user(
+                    username=form.cleaned_data['username'],
+                    email=form.cleaned_data['email'],
+                    password=form.cleaned_data['password1'],
                 )
-            )
+                messages.success(request,
+                    f'{user} saved!',
+                    extra_tags='success'
+                )
+
+                
+                return HttpResponseRedirect(
+                    reverse(
+                        'admin_dashboard_profiles_update',
+                        kwargs={
+                            'profile': user.profile.pk
+                        }
+                    )
+                )
+            except IntegrityError:
+                context = {
+                "page_title": "Create new Account",
+                "menu_section": "admin_dashboard",
+                "menu_subsection": "account",
+                "menu_action": "create",
+                "form": form
+                }
+
+                messages.error(
+                    request,
+                    'A user with this username or email already exists in the system!',
+                    extra_tags='danger'
+                )
+                return render(request, "admin_dashboard/accounts/form.html", context)
         else:
             context = {
                 "page_title": "Create new Account",
