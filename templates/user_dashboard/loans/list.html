@@ -78,7 +78,7 @@
                 let tableData = '';
                 $.each(data.results, function(index, value) {
                     let updateUrl = "{% url 'user_dashboard_loans_detail' 0 %}".replace(/0/, value.id);
-                    let paymentUrl = "{% url 'user_dashboard_payments_create' 0 1 %}".replace(/0/, {{user.pk}}).replace(/1/, value.id);
+                    let paymentUrl = "{% url 'user_dashboard_payments_create' 0 1 %}".replace(/1/, value.id).replace(/0/, {{user.pk}});
                     tableData = tableData + `
                         <tr>
                             <td>${value.type.name}</td>
