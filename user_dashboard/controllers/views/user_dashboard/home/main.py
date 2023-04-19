@@ -31,9 +31,9 @@ class UserDashboardHomeView(LoginRequiredMixin, IsUserViewMixin, View):
         users = Account.objects.all()
 
         context = {
-            "page_title": f"Admin Dashboards",
-            "menu_section": "admin_dashboard",
-            "menu_subsection": "admin_dashboard",
+            "page_title": f"User Dashboard",
+            "menu_section": "user_dashboard",
+            "menu_subsection": "user_dashboard",
             "menu_action": "home",
             "users": users,
 

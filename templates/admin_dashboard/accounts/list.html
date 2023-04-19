@@ -33,7 +33,7 @@
                         <th>Contact Number</th>
                         <th>Civil Status</th>
                         <th>User Type</th>
-                        <th>Staff</th>
+                        <th>Created By</th>
                         <th class="text-right">Actions</th>
                     </tr>
                     </thead>
@@ -44,7 +44,7 @@
                             <td>{{ obj.profile.contact_number }}</td>
                             <td>{{ obj.profile.get_civil_status_display }}</td>
                             <td>{{ obj.get_user_type_display }}</td>
-                            <td>{{ obj.is_staff }}</td>
+                            <td>{{ obj.created_by.profile.first_name }}</td>
                             <td class="td-actions text-right">
                                 <a class="btn btn-info btn-sm btn-icon" href="{% url 'admin_dashboard_accounts_detail' obj.pk %}">
                                     <i class="tim-icons icon-badge"></i>
