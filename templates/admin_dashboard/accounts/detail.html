@@ -14,7 +14,7 @@
             <nav aria-label="breadcrumb" role="navigation">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{% url 'admin_dashboard_home_view' %}">Home</a></li>
-                    <li class="breadcrumb-item"><a href="{% url 'admin_dashboard_accounts_list' %}">Accounts</a>
+                    <li class="breadcrumb-item"><a href="{% url 'admin_dashboard_accounts_list' 1 %}">Accounts</a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">{{ page_title }}</li>
                 </ol>
@@ -180,7 +180,7 @@
             <h4 class="card-title">Actions</h4>
         </div>
         <div class="card-body">
-            <a class="btn btn-info btn-sm btn-icon" href="{% url 'admin_dashboard_accounts_list' %}"
+            <a class="btn btn-info btn-sm btn-icon" href="{% url 'admin_dashboard_accounts_list' 1 %}"
                title="View List">
                 <i class="tim-icons icon-bullet-list-67"></i>
             </a>
