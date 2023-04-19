@@ -57,6 +57,7 @@ urlpatterns = [
     path('loans/', include('loans.urls')),
     path('amortizations/', include('amortizations.urls')),
     path('payments', include('payments.urls')),
+    path('complaints', include('complaints.urls')),
 
     # dashboards
     path('admin/', include('admin_dashboard.urls')),

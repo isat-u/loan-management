@@ -2,6 +2,7 @@ from django.urls import path
 from user_dashboard.controllers.views.user_dashboard.home import main as home_views
 from user_dashboard.controllers.views.user_dashboard.loans import main as loans_views
 from user_dashboard.controllers.views.user_dashboard.payments import main as payments_views
+from user_dashboard.controllers.views.user_dashboard.complaints import main as complaints_views
 
 urlpatterns = [
     path(
@@ -65,5 +66,34 @@ urlpatterns += [
         'payment/<payment>/delete',
         payments_views.UserDashboardPaymentRequestDeleteView.as_view(),
         name='user_dashboard_payments_delete'
+    )
+]
+
+# Complaints
+urlpatterns += [
+    path(
+        'complaint/list',
+        complaints_views.UserDashboardComplaintListView.as_view(),
+        name='user_dashboard_complaints_list'
+    ),
+    path(
+        'complaint/<complaint>/detail',
+        complaints_views.UserDashboardComplaintDetailView.as_view(),
+        name='user_dashboard_complaints_detail'
+    ),
+    path(
+        'complaint/create',
+        complaints_views.UserDashboardComplaintCreateView.as_view(),
+        name='user_dashboard_complaints_create'
+    ),
+    path(
+        'complaint/<complaint>/update',
+        complaints_views.UserDashboardComplaintUpdateView.as_view(),
+        name='user_dashboard_complaints_update'
+    ),
+    path(
+        'complaint/<complaint>/delete',
+        complaints_views.UserDashboardComplaintDeleteView.as_view(),
+        name='user_dashboard_complaints_delete'
     )
 ]

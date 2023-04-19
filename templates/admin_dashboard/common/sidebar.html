@@ -35,19 +35,6 @@
             <span>Payment Requests</span></a>
     </li>
 
-    <!-- Nav Item - Loans -->
-    <li class="nav-item {% if menu_subsection == 'loans' %}active{% endif %}">
-        <a class="nav-link" href="{% url 'admin_dashboard_loans_list' %}">
-            <i class="fas fa-fw fa-hand-holding"></i>
-            <span>Loans</span></a>
-    </li>
-    <!-- Nav Item - Loan Types -->
-    <li class="nav-item {% if menu_subsection == 'loan_type' %}active{% endif %}">
-        <a class="nav-link" href="{% url 'admin_dashboard_loan_types_list' %}">
-            <i class="fas fa-fw fa-landmark"></i>
-            <span>Loan Type</span></a>
-    </li>
-
     <!-- Nav Item - Members -->
     <li class="nav-item">
         <a class="nav-link" data-toggle="collapse" href="#member_menu" aria-expanded="false" aria-controls="member_menu">
@@ -71,6 +58,27 @@
                 </li>
             </ul>
         </div>
+    </li>
+
+    <!-- Nav Item - Loans -->
+    <li class="nav-item {% if menu_subsection == 'loans' %}active{% endif %}">
+        <a class="nav-link" href="{% url 'admin_dashboard_loans_list' %}">
+            <i class="fas fa-fw fa-hand-holding"></i>
+            <span>Loans</span></a>
+    </li>
+
+    <!-- Nav Item - Loan Types -->
+    <li class="nav-item {% if menu_subsection == 'loan_type' %}active{% endif %}">
+        <a class="nav-link" href="{% url 'admin_dashboard_loan_types_list' %}">
+            <i class="fas fa-fw fa-landmark"></i>
+            <span>Loan Type</span></a>
+    </li>
+
+    <!-- Nav Item - Complaints -->
+    <li class="nav-item {% if menu_subsection == 'complaint' %}active{% endif %}">
+        <a class="nav-link" href="{% url 'admin_dashboard_complaints_list' %}">
+            <i class="fas fa-fw fa-comment"></i>
+            <span>Complaints</span></a>
     </li>
 
     <!-- Divider -->

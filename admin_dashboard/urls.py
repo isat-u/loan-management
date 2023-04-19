@@ -5,6 +5,8 @@ from admin_dashboard.controllers.views.admin_dashboard.profiles import main as p
 from admin_dashboard.controllers.views.admin_dashboard.loans import main as loans_views
 from admin_dashboard.controllers.views.admin_dashboard.loan_types import main as loan_types_views
 from admin_dashboard.controllers.views.admin_dashboard.payment_requests import main as payment_requests_views
+from admin_dashboard.controllers.views.admin_dashboard.complaints import main as complaints_views
+
 
 urlpatterns = [
     path(
@@ -167,4 +169,34 @@ urlpatterns += [
         payment_requests_views.AdminDashboardPaymentRequestCompleteView.as_view(),
         name='admin_dashboard_payment_requests_complete'
     ),
+]
+
+# Complaint
+
+urlpatterns += [
+    path(
+        'complaint/list',
+        complaints_views.AdminDashboardComplaintListView.as_view(),
+        name='admin_dashboard_complaints_list'
+    ),
+    path(
+        'complaint/<complaint>/detail',
+        complaints_views.AdminDashboardComplaintDetailView.as_view(),
+        name='admin_dashboard_complaints_detail'
+    ),
+    path(
+        'complaint/create',
+        complaints_views.AdminDashboardComplaintCreateView.as_view(),
+        name='admin_dashboard_complaints_create'
+    ),
+    path(
+        'complaint/<complaint>/update',
+        complaints_views.AdminDashboardComplaintUpdateView.as_view(),
+        name='admin_dashboard_complaints_update'
+    ),
+    path(
+        'complaint/<complaint>/delete',
+        complaints_views.AdminDashboardComplaintDeleteView.as_view(),
+        name='admin_dashboard_complaints_delete'
+    )
 ]

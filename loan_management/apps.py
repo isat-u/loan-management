@@ -57,4 +57,5 @@ INSTALLED_APPS += [
     'loans',
     'amortizations',
     'payments',
+    'complaints',
 ]
