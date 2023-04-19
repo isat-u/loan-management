@@ -35,23 +35,42 @@
             <span>Payment Requests</span></a>
     </li>
 
-    <!-- Nav Item - Users -->
-    <li class="nav-item {% if menu_subsection == 'account' %}active{% endif %}">
-        <a class="nav-link" href="{% url 'admin_dashboard_accounts_list' %}">
-            <i class="fas fa-fw fa-users"></i>
-            <span>Members</span></a>
-    </li>
-    <!-- Nav Item - Users -->
-    <li class="nav-item {% if menu_subsection == 'account' %}active{% endif %}">
+    <!-- Nav Item - Loans -->
+    <li class="nav-item {% if menu_subsection == 'loans' %}active{% endif %}">
         <a class="nav-link" href="{% url 'admin_dashboard_loans_list' %}">
             <i class="fas fa-fw fa-hand-holding"></i>
             <span>Loans</span></a>
     </li>
-    <!-- Nav Item - Users -->
+    <!-- Nav Item - Loan Types -->
     <li class="nav-item {% if menu_subsection == 'loan_type' %}active{% endif %}">
         <a class="nav-link" href="{% url 'admin_dashboard_loan_types_list' %}">
             <i class="fas fa-fw fa-landmark"></i>
             <span>Loan Type</span></a>
+    </li>
+
+    <!-- Nav Item - Members -->
+    <li class="nav-item">
+        <a class="nav-link" data-toggle="collapse" href="#member_menu" aria-expanded="false" aria-controls="member_menu">
+            <i class="fas fa-fw fa-users"></i>
+            <span>Members</span></a>
+        </a>
+        <div class="collapse {% if menu_subsection == 'account' or menu_subsection == 'account' %}show{% endif %}"
+             id="member_menu">
+            <ul class="nav">
+                <li class="{% if menu_subsection == 'account' %}active{% endif %}">
+                    <a class="nav-link" href="{% url 'admin_dashboard_accounts_list' 1 %}">
+                        <i class="fas fa-fw fa-users"></i>
+                        <span>Member</span></a>
+                    </a>
+                </li>
+                <li class="{% if menu_subsection == 'account' %}active{% endif %}">
+                    <a class="nav-link" href="{% url 'admin_dashboard_accounts_list' 0 %}">
+                        <i class="fas fa-fw fa-users"></i>
+                        <span>Non-Member</span></a>
+                    </a>
+                </li>
+            </ul>
+        </div>
     </li>
 
     <!-- Divider -->

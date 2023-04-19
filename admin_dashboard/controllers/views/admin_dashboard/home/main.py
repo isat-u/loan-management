@@ -12,6 +12,9 @@ from django.views import View
 from accounts.mixins.user_type_mixins import IsAdminViewMixin
 from accounts.models import Account
 from accounts.models.account.constants import SUPERADMIN, ADMIN, USER
+from loans.models.loan.models import Loan
+from loans.models.loan_type.models import LoanType
+from payments.models.payment_request.models import PaymentRequest
 
 
 class AdminDashboardHomeView(LoginRequiredMixin, IsAdminViewMixin, View):
@@ -29,6 +32,14 @@ class AdminDashboardHomeView(LoginRequiredMixin, IsAdminViewMixin, View):
 
     def get(self, request, *args, **kwargs):
         users = Account.objects.all()
+        loans = Loan.objects.all()
+        loan_types = LoanType.objects.all()
+        loan_summary = []
+        payment_requests = PaymentRequest.objects.filter(status='pending')
+
+        for loan_type in loan_types:
+            data = {'loan_type': loan_type, 'count': loans.filter(type=loan_type).count()}
+            loan_summary.append(data)
 
         context = {
             "page_title": f"Admin Dashboards",
@@ -36,7 +47,9 @@ class AdminDashboardHomeView(LoginRequiredMixin, IsAdminViewMixin, View):
             "menu_subsection": "admin_dashboard",
             "menu_action": "home",
             "users": users,
-
+            "loans": loans,
+            "loan_summary": loan_summary,
+            "payment_requests": payment_requests,
         }
 
         return render(request, "admin_dashboard/home/home.html", context)
