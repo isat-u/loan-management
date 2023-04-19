@@ -8,12 +8,8 @@ class LoanForm(ModelForm):
         fields = (
             'amount',
             'savings',
-            'maturity',
             'due_date',
             'years',
-            'monthly_amortization',
-            'yearly_interest',
-            'monthly_interest',
             'type',
         )
 
