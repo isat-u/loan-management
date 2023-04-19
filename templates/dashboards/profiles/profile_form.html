@@ -1,43 +1,38 @@
-{% extends 'dashboards/profiles/profile_base.html' %}
+{% extends 'dashboards/base.html' %}
 {% load static %}
 {% load crispy_forms_tags %}
-{% block header_css %}
-{% endblock %}
 
-{% block content %}
-    <!-- content -->
-    <div class="card spur-card">
-        <div class="card-header">
-            <div class="spur-card-icon">
-                <i class="fas fa-table"></i>
-            </div>
-            <div class="spur-card-title">Update Profile</div>
-        </div>
-        <div class="card-body">
-            <form method="post">
-                {% csrf_token %}
-                {{ form|crispy }}
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary">Submit</button>
+{% block header_css %} {% endblock %}
+{% block header_js %} {% endblock %}
+
+{% block page_wrapper_contents %}
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">{{ page_title }}</h2>
                 </div>
-            </form>
+                <div class="card-body">
+                    {% if messages %} {% for m in messages %}
+                        <div class="alert alert-{{ m.tags }}">{{ m }}</div>
+                    {% endfor %} {% endif %}
+                    <form method="post">
+                        {% csrf_token %}
+
+                        {{ form|crispy }}
+                        <p>
+                            <button type="submit" class="btn btn-success animation-on-hover">
+                                Submit
+                            </button>
+                        </p>
+
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- /content -->
 {% endblock %}
+
 {% block scripts %}
-{{ form.media }}
-
-    <script type="text/javascript">
-        $("#id_date_of_birth").datepicker({
-            format: 'yyyy-mm-dd',
-            footer: true,
-            modal: true,
-            header: true,
-            uiLibrary: 'bootstrap4',
-            iconsLibrary: 'fontawesome'
-        });
-    </script>
-
 {% endblock %}

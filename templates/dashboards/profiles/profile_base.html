@@ -1,21 +1,65 @@
 {% extends 'dashboards/base.html' %}
+{% load static %}
+
 {% block header_css %} {% endblock %}
 {% block header_js %} {% endblock %}
-{% block home_url %}
-<a href="" class="spur-logo"><i class="fas fa-bolt"></i>
-    <span>Loan Management</span></a>
-{% endblock %}
-{% block sidebar %}
-{% include "dashboards/profiles/common/sidebar.html" %}
-{% endblock %}
-{% block topbar %}
-    {% include "dashboards/profiles/common/topbar.html" %}
-{% endblock %}
-<main class="dash-content">
-    <div class="container-fluid">
-        {% block content %}
-        {% endblock %}
-    </div>
-</main>
 
-{% block scripts %}{% endblock %}
+{% block page_wrapper_contents %}
+    <div class="card mb-3">
+        <div class="card-body">
+            {% if messages %} {% for m in messages %} 
+                <div class="alert alert-{{ m.tags }} ">{{ m }}</div>
+            {% endfor %} {% endif %}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-category">&nbsp;</h5>
+                    <h2 class="card-title">Profile</h2>
+                </div>
+                <div class="card-body">
+                    <h4 class="card-title">{{ user.profile.get_full_name }}</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">Name</h6>
+                    <h4 class="card-title">{{ user.profile.contact_number }}</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">Mobile</h6>
+                    <h4 class="card-title">{{ user.profile.gender }}</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">Gender</h6>
+                    <h4 class="card-title">{{ user.profile.get_spouse_full_name }}</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">Spouse</h6>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-category">&nbsp;</h5>
+                    <h2 class="card-title">Status</h2>
+                </div>
+                <div class="card-body">
+                    <h4 class="card-title">
+                        {% if user.is_active %}
+                            <strong class="text-primary">Active</strong>
+                        {% else %}
+                            <strong class="text-secondary">Inactive</strong>
+                        {% endif %}</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">Status</h6>
+                    <h4 class="card-title">{{ user.profile.get_civil_status_display }}</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">Civil Status</h6>
+                    <h4 class="card-title">{{ user.created }}</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">Date Created</h6>
+                    <h4 class="card-title">{{ user.updated }}</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">Date Last Updated</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}
