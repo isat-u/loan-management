@@ -75,7 +75,8 @@ class AdminDashboardAccountListView(LoginRequiredMixin, IsAdminViewMixin, View):
     """
 
     def get(self, request, *args, **kwargs):
-        obj_list = Master.objects.filter(user_type__in=[USER])
+        member_type = kwargs.get('member_type', 0)
+        obj_list = Master.objects.filter(user_type__in=[USER], is_member=member_type)
         paginator = Paginator(obj_list, 50)
         page = request.GET.get('page')
         objs = paginator.get_page(page)

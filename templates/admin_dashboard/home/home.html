@@ -1,5 +1,6 @@
 {% extends 'admin_dashboard/base.html' %}
 {% load static %}
+{% load humanize %}
 
 {% block header_css %} {% endblock %}
 {% block header_js %} {% endblock %}
@@ -10,7 +11,7 @@
             <div class="card shadow mb-4">
                 <div class="card-header py-4">
                     <h6 class="m-0 font-weight-bold text-primary">
-                        <a href="{% url 'admin_dashboard_accounts_list' %}">Users Count</a>
+                        <a href="{% url 'admin_dashboard_accounts_list' %}">Members</a>
                         <button class="btn btn-danger rounded-circle px-2 py-0 float-right"
                                 title="Inactive">{% if users.inactives.count %}{{ users.inactive.count }}{% else %}0{% endif %}</button>
                         <button class="btn btn-success rounded-circle px-2 py-0 float-right mr-1"
@@ -29,6 +30,87 @@
                     </div>
                 </div>
             </div>
+
+            <div class="card shadow mb-4">
+                <div class="card-header py-4">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <a href="{% url 'admin_dashboard_accounts_list' %}">Loans</a>
+                        <button class="btn btn-danger rounded-circle px-2 py-0 float-right"
+                                title="Inactive">{% if loans.inactives.count %}{{ loans.inactive.count }}{% else %}0{% endif %}</button>
+                        <button class="btn btn-success rounded-circle px-2 py-0 float-right mr-1"
+                                title="Active">{{ loans.actives.count }}</button>
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col-md-10">
+                            <div class="row no-gutters align-items-center">
+                                {% for loan in loan_summary %}
+                                <div class="col-md-3">
+                                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1 text-nowrap">{{ loan.loan_type.name }}</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ loan.count }}</div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="col-md-2 right">
+                            <i class="fas fa-hand-holding fa-2x text-gray-300 float-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+       
+        <div class="col-md-8 col-sm-12">
+            <div class="card shadow mb-4">
+                <div class="card-header py-4">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <a href="{% url 'admin_dashboard_accounts_list' %}">Pending Payments</a>
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>Payment Date</th>
+                                <th>Name</th>
+                                <th>Loan</th>
+                                <th>Loan Amount</th>
+                                <th>Source</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th class="text-right">Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for obj in payment_requests %}
+                                <tr>
+                                    <td>{{ obj.created|date:"M d, Y" }}</td>
+                                    <td>{{ obj.account.profile.get_name }}</td>
+                                    <td>{{ obj.loan.type.name }}</td>
+                                    <td>PHP{{ obj.loan.amount|floatformat:2|intcomma }}</td>
+                                    <td>{{ obj.payment_source|title }}</td>
+                                    <td>{{ obj.currency }}{{ obj.amount|floatformat:2|intcomma }}</td>
+                                    <td class="font-weight-bold {% if obj.status == 'pending' %}text-warning {% else %}text-primary{% endif %}">{{ obj.status|title }}</td>
+                                    <td class="td-actions text-right">
+                                        <a class="btn btn-info btn-sm btn-icon" href="{% url 'admin_dashboard_payment_requests_detail' obj.pk %}" title="Details">
+                                            <i class="tim-icons icon-badge"></i>
+                                        </a>
+                                        <a class="btn btn-primary btn-sm btn-icon" href="{% url 'admin_dashboard_payment_requests_update' obj.pk %}" title="Update">
+                                            <i class="tim-icons icon-pencil"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-sm-4">
+            
         </div>
     </div>
 {% endblock %}

@@ -17,7 +17,7 @@ urlpatterns = [
 # Account
 urlpatterns += [
     path(
-        'account/list',
+        'account/list/<member_type>',
         accounts_views.AdminDashboardAccountListView.as_view(),
         name='admin_dashboard_accounts_list'
     ),

@@ -63,6 +63,7 @@ class Account(AbstractBaseUser):
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     user_type = models.CharField(choices=USER_TYPE_CHOICES, default=USER, max_length=6)
+    is_member = models.BooleanField(default=True)
 
     # NonRelational data
     user_settings = models.JSONField(default=dict)

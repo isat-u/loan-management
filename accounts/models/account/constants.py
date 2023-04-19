@@ -34,3 +34,8 @@ YES_NO = (
     (True, 'Active'),
     (False, 'Disable'),
 )
+
+MEMBER_CHOICES = (
+    (True, 'Member'),
+    (False, 'Non-Member')
+)
