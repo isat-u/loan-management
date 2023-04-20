@@ -183,7 +183,7 @@ class AdminDashboardProfileDetailView(LoginRequiredMixin, IsAdminViewMixin, View
         return render(request, "admin_dashboard/accounts/detail.html", context)
 
 
-class AdminDashboardProfileUpdateView(LoginRequiredMixin, IsAdminViewMixin, View):
+class AdminDashboardProfileUpdateView(LoginRequiredMixin, View):
     """ 
     Create view for Profiles. 
     
@@ -212,7 +212,7 @@ class AdminDashboardProfileUpdateView(LoginRequiredMixin, IsAdminViewMixin, View
             "form": form
         }
 
-        return render(request, "admin_dashboard/profiles/form.html", context)
+        return render(request, "dashboards/profiles/profile_form.html", context)
     
     def post(self, request, *args, **kwargs):
         obj = get_object_or_404(Master, pk=kwargs.get('profile', None))
@@ -227,15 +227,8 @@ class AdminDashboardProfileUpdateView(LoginRequiredMixin, IsAdminViewMixin, View
                 f'{data} saved!',
                 extra_tags='success'
             )
-
-            return HttpResponseRedirect(
-                reverse(
-                    'admin_dashboard_accounts_detail',
-                    kwargs={
-                        'account': data.account.pk
-                    }
-                )
-            )
+            next = request.POST.get('next', '/')
+            return HttpResponseRedirect(next)
         else:
             context = {
                 "page_title": "Update Profile: {obj}",

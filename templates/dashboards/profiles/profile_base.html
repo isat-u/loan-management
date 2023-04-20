@@ -10,6 +10,8 @@
             {% if messages %} {% for m in messages %} 
                 <div class="alert alert-{{ m.tags }} ">{{ m }}</div>
             {% endfor %} {% endif %}
+            <a class="btn btn-secondary" href="/">Go back</a>
+
         </div>
     </div>
 
@@ -56,6 +58,17 @@
                     <h6 class="card-subtitle mb-2 text-muted">Date Last Updated</h6>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Actions</h4>
+        </div>
+        <div class="card-body">
+            <a class="btn btn-success btn-sm btn-icon" href="{% url 'dashboard_profiles_update' user.profile.pk %}" title="Update Complaint">
+                <i class="tim-icons icon-settings"></i>
+            </a>
         </div>
     </div>
 

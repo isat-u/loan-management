@@ -22,7 +22,6 @@ class ProfileForm(forms.ModelForm):
             'spouse_first_name',
             'spouse_middle_name',
             'spouse_last_name',
-            'account',
         )
         widgets = {
             'date_of_birth': DatePickerInput(),

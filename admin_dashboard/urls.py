@@ -65,7 +65,7 @@ urlpatterns += [
     path(
         'profile/<profile>/update',
         profiles_views.AdminDashboardProfileUpdateView.as_view(),
-        name='admin_dashboard_profiles_update'
+        name='dashboard_profiles_update'
     ),
     path(
         'profile/<profile>/delete',
