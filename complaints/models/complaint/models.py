@@ -36,7 +36,7 @@ class Complaint(models.Model):
     # === Identifiers ===
     title = models.CharField(max_length=150)
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, null=True, editable=True)
-    slug = extension_fields.AutoSlugField(populate_from='name', blank=True)
+    slug = extension_fields.AutoSlugField(populate_from='title', blank=True)
 
     # === Properties ===
     type = models.CharField(max_length=150, blank=True, null=True)

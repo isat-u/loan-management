@@ -27,6 +27,58 @@
                         </p>
 
                     </form>
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-category">&nbsp;</h5>
+                                    <h2 class="card-title">{{ obj.title }}</h2>
+                                </div>
+                                <div class="card-body">
+                                    <h4 class="card-title">{{ obj.title }}</h4>
+                                    <h6 class="card-subtitle mb-2 text-muted">Title</h6>
+                                    <h4 class="card-title">{{ obj.type }}</h4>
+                                    <h6 class="card-subtitle mb-2 text-muted">Type</h6>
+                                    <h4 class="card-title">{{ obj.get_status_display }}</h4>
+                                    <h6 class="card-subtitle mb-2 text-muted">Status</h6>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-category">&nbsp;</h5>
+                                    <h2 class="card-title">Status</h2>
+                                </div>
+                                <div class="card-body">
+                                    <h4 class="card-title">
+                                        {% if obj.is_active %}
+                                            <strong class="text-primary">Active</strong>
+                                        {% else %}
+                                            <strong class="text-secondary">Inactive</strong>
+                                        {% endif %}</h4>
+                                    <h6 class="card-subtitle mb-2 text-muted">Status</h6>
+                                    <h4 class="card-title">{{ obj.created }}</h4>
+                                    <h6 class="card-subtitle mb-2 text-muted">Date Created</h6>
+                                    <h4 class="card-title">{{ obj.updated }}</h4>
+                                    <h6 class="card-subtitle mb-2 text-muted">Date Last Updated</h6>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-12 mb-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-category">&nbsp;</h5>
+                                    <h2 class="card-title">Content</h2>
+                                </div>
+                                <div class="card-body">
+                                    <h4 class="card-title">{{ obj.content }}</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

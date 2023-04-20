@@ -21,10 +21,7 @@
     </div>
 
     <div class="card">
-        <div class="card-body">
-            {% if messages %} {% for m in messages %} 
-                <div class="alert alert-{{ m.tags }}">{{ m }}</div>
-            {% endfor %} {% endif %} 
+        <div class="card-body"> 
             <div class="table-responsive">
                 <table class="table">
                     <thead>
