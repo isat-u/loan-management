@@ -126,15 +126,16 @@ class AdminDashboardAccountCreateView(LoginRequiredMixin, IsAdminViewMixin, View
         form = MasterForm(data=request.POST)
 
         if form.is_valid():
-            # data = form.save(commit=False)
-            # data.created_by = request.user
-            # data.save()
+
             try:
                 user = Master.objects.create_user(
                     username=form.cleaned_data['username'],
                     email=form.cleaned_data['email'],
                     password=form.cleaned_data['password1'],
+                    is_member=form.cleaned_data['is_member'],
                 )
+                user.created_by = request.user
+                user.save()
                 messages.success(request,
                     f'{user} saved!',
                     extra_tags='success'

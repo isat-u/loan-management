@@ -1,4 +1,5 @@
 from django import forms
+from django.forms import widgets
 from profiles.models.profile_models import Profile
 from bootstrap_datepicker_plus.widgets import DatePickerInput
 
@@ -24,5 +25,5 @@ class ProfileForm(forms.ModelForm):
             'spouse_last_name',
         )
         widgets = {
-            'date_of_birth': DatePickerInput(),
+            'date_of_birth': widgets.DateInput(attrs={'type': 'date'})
         }

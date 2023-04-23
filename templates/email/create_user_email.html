@@ -1,0 +1,16 @@
+{% autoescape off %}
+    Hi {{ user.profile.get_full_name }},
+    <br>
+    <p>Maayon <a
+            href="{{ domain }}"> Loan Management System</a>, this will be your account credentials:</p>
+    <br>
+    <div>Username: {{ user.username }}</div>
+    <div>Email: {{ user.email }}</div>
+    <div>Password: {{ password }}</div>
+
+    <p>Note: Don't forget your EMAIL and PAsSWORD since it will be used in every transactions</p>
+    <p>*** THIS IS A SYSTEM GENERATED EMAIL. PLEASE DO NOT REPLY TO THIS MESSAGE ***</p>
+    <br><br>
+    Sincerely,<br>
+    <strong>Maayon Team</strong>
+{% endautoescape %}

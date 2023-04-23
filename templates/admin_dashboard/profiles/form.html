@@ -19,7 +19,7 @@
                     <form method="post">
                         {% csrf_token %}
 
-                        {% crispy form %}
+                        {{ form|crispy }}
                         <p>
                             <button type="submit" class="btn btn-success animation-on-hover">
                                 Submit

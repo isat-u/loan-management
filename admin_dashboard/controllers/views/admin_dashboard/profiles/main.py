@@ -183,7 +183,7 @@ class AdminDashboardProfileDetailView(LoginRequiredMixin, IsAdminViewMixin, View
         return render(request, "admin_dashboard/accounts/detail.html", context)
 
 
-class AdminDashboardProfileUpdateView(LoginRequiredMixin, View):
+class AdminDashboardProfileUpdateView(LoginRequiredMixin, IsAdminViewMixin, View):
     """ 
     Create view for Profiles. 
     
@@ -212,12 +212,12 @@ class AdminDashboardProfileUpdateView(LoginRequiredMixin, View):
             "form": form
         }
 
-        return render(request, "dashboards/profiles/profile_form.html", context)
+        return render(request, "admin_dashboard/profiles/form.html", context)
     
     def post(self, request, *args, **kwargs):
         obj = get_object_or_404(Master, pk=kwargs.get('profile', None))
         form = MasterForm(instance=obj, data=request.POST)
-
+        print('posting *********************')
         if form.is_valid():
             data = form.save(commit=False)
             data.updated_by = request.user
@@ -227,8 +227,15 @@ class AdminDashboardProfileUpdateView(LoginRequiredMixin, View):
                 f'{data} saved!',
                 extra_tags='success'
             )
-            next = request.POST.get('next', '/')
-            return HttpResponseRedirect(next)
+            print('data.account.pk', data.account.pk)
+            return HttpResponseRedirect(
+                reverse(
+                    'admin_dashboard_accounts_detail',
+                    kwargs={
+                        'account': data.account.pk
+                    }
+                )
+            )
         else:
             context = {
                 "page_title": "Update Profile: {obj}",
@@ -291,3 +298,67 @@ class AdminDashboardProfileDeleteView(LoginRequiredMixin, IsAdminViewMixin, View
                 'admin_dashboard_profiles_list'
             )
         )
+
+
+class DashboardProfileUpdateView(LoginRequiredMixin, View):
+    """ 
+    Create view for Profiles. 
+    
+    Allowed HTTP verbs: 
+        - GET
+        - POST
+    
+    Restrictions:
+        - LoginRequired
+        - Admin user
+
+    Filters:
+        - pk = kwargs.get('pk')
+    """
+
+    def get(self, request, *args, **kwargs):
+        obj = get_object_or_404(Master, pk=kwargs.get('profile', None))
+        form = MasterForm(instance=obj)
+
+        context = {
+            "page_title": f"Update Profile: {obj}",
+            "menu_section": "admin_dashboard",
+            "menu_subsection": "profile",
+            "menu_action": "update",
+            "obj": obj,
+            "form": form
+        }
+
+        return render(request, "dashboards/profiles/profile_form.html", context)
+    
+    def post(self, request, *args, **kwargs):
+        obj = get_object_or_404(Master, pk=kwargs.get('profile', None))
+        form = MasterForm(instance=obj, data=request.POST)
+
+        if form.is_valid():
+            data = form.save(commit=False)
+            data.updated_by = request.user
+            data = form.save()
+            messages.success(
+                request,
+                f'{data} saved!',
+                extra_tags='success'
+            )
+            next = request.POST.get('next', '/')
+            return HttpResponseRedirect(next)
+        else:
+            context = {
+                "page_title": "Update Profile: {obj}",
+                "menu_section": "admin_dashboard",
+                "menu_subsection": "profile",
+                "menu_action": "update",
+                "obj": obj,
+                "form": form
+            }
+
+            messages.error(
+                request,
+                'There were errors processing your request:',
+                extra_tags='danger'
+            )
+            return render(request, "admin_dashboard/profiles/form.html", context)

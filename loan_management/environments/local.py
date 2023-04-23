@@ -79,7 +79,7 @@ DEBUG_TOOLBAR_PANELS = [
 
 def show_toolbar(request):
     if DEBUG:
-        return True
+        return False
     return False
 
 
@@ -310,3 +310,10 @@ CHANNEL_LAYERS = {
 PAYPAL_IDENTITY_TOKEN = "RqA9_K6u56_gYv9Q6b1uWu5enylAahmagYsiJ6kbXUllOdROBJ3S2knTVny"
 PAYPAL_RECEIVER_EMAIL = 'icare-facilitator@pilantropo.com'
 PAYPAL_TEST = True
+
+########################################################################################################################
+# EMAIL
+########################################################################################################################
+# DEFAULT_FROM_EMAIL = 'info@fcusrvotingsystem.com'
+SENDGRID_API_KEY = "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"
+DEFAULT_FROM_EMAIL = 'info@fcusronlinevoting.com'

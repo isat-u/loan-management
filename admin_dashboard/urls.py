@@ -65,13 +65,18 @@ urlpatterns += [
     path(
         'profile/<profile>/update',
         profiles_views.AdminDashboardProfileUpdateView.as_view(),
-        name='dashboard_profiles_update'
+        name='admin_dashboard_profiles_update'
     ),
     path(
         'profile/<profile>/delete',
         profiles_views.AdminDashboardProfileDeleteView.as_view(),
         name='admin_dashboard_profiles_delete'
-    )
+    ),
+    path(
+        'profile/<profile>/update',
+        profiles_views.DashboardProfileUpdateView.as_view(),
+        name='dashboard_profiles_update'
+    ),
 ]
 
 # Loan

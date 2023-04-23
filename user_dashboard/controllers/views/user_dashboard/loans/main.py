@@ -5,6 +5,8 @@ Description for Loan Management
 Author: Maayon (maayon@gmail.com)
 Version: 0.0.1
 """
+import datetime
+from dateutil.relativedelta import relativedelta
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Sum
@@ -125,6 +127,12 @@ class UserDashboardLoanCreateView(LoginRequiredMixin, IsUserViewMixin, View):
         form = MasterForm(data=request.POST)
         if form.is_valid():
             data = form.save(commit=False)
+            months = data.years * 12
+            data.due_date = datetime.date.today() + relativedelta(months=months)
+            data.maturity = data.amount * 0.05
+            data.monthly_amortization = data.amount * 0.03
+            data.yearly_interest = data.amount * 0.05
+            data.monthly_interest = data.yearly_interest / 12
             data.account = request.user
             data.is_active = False
             data.created_by = request.user

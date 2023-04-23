@@ -43,7 +43,7 @@ class Profile(models.Model):
                                related_name='region_profiles')
     province = models.ForeignKey('locations.Province', blank=True, default=22, null=False, on_delete=models.CASCADE,
                                  related_name='province_profiles')
-    city = models.ForeignKey('locations.City', blank=True, default=381, null=False, on_delete=models.CASCADE,
+    city = models.ForeignKey('locations.City', blank=True, default=388, null=False, on_delete=models.CASCADE,
                              related_name='province_profiles')
     account = models.OneToOneField(
         'accounts.Account',

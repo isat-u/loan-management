@@ -1,4 +1,4 @@
-from django.forms import ModelForm, DateField, widgets
+from django.forms import ModelForm, widgets
 from loans.models.loan.models import Loan
 
 
