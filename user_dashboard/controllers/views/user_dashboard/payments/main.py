@@ -150,6 +150,7 @@ class UserDashboardPaymentRequestCreateView(LoginRequiredMixin, IsUserViewMixin,
                 payment_source=data.payment_source,
                 amount=data.amount,
                 loan=data.loan,
+                provider_data={'contact_phone': data.phone_number},
                 currency='PHP',
                 account=request.user,
             )

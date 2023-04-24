@@ -317,3 +317,10 @@ PAYPAL_TEST = True
 # DEFAULT_FROM_EMAIL = 'info@fcusrvotingsystem.com'
 SENDGRID_API_KEY = "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"
 DEFAULT_FROM_EMAIL = 'info@fcusronlinevoting.com'
+
+########################################################################################################################
+# TWILIO
+########################################################################################################################
+ACCOUNT_SID = 'ACeaff37a106ddcc20dd1d0f5924d38e23'
+AUTH_TOKEN = '8bf677737fd1cd2dc5dbfdb582459453'
+FROM_NUMBER = '+16813223242'
