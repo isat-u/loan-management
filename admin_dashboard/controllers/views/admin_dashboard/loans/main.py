@@ -236,6 +236,7 @@ class AdminDashboardLoanDetailView(LoginRequiredMixin, IsAdminViewMixin, View):
             balance = obj.amount - total_payment
         else:
             balance = obj.amount
+            
         context = {
             "page_title": f"Loan: {obj}",
             "menu_section": "admin_dashboard",

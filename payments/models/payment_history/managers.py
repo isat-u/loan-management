@@ -23,13 +23,18 @@ class PaymentHistoryManager(models.Manager):
         return self.get_queryset().inactive()
     
     def create(self, *args, **kwargs):
-        account_sid = settings.ACCOUNT_SID
-        auth_token = settings.AUTH_TOKEN
-        client = Client(account_sid, auth_token)
-        message = client.messages.create(
-            body=f'Hello {kwargs["account"]}, your payment request amounting {kwargs["amount"]} has been received. We will get back to you shortly.',
-            from_=settings.FROM_NUMBER,
-            to=kwargs["provider_data"]['contact_phone']
-        )
-        print(message.sid)
+        try:
+            account_sid = settings.ACCOUNT_SID
+            auth_token = settings.AUTH_TOKEN
+            client = Client(account_sid, auth_token)
+            message = client.messages.create(
+                body=f'Hello {kwargs["account"]}, your payment request amounting {kwargs["amount"]} has been received. We will get back to you shortly.',
+                from_=settings.FROM_NUMBER,
+                to=kwargs["provider_data"]['contact_phone']
+            )
+            print(message.sid)
+        except Exception as e:
+            print('*****************************************************')
+            print(e)
+            print('*****************************************************')
         return super().create(*args, **kwargs)
