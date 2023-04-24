@@ -71,6 +71,7 @@ sqlparse
 tblib
 tex
 traitlets
+twilio
 Twisted
 txaio
 uuid
