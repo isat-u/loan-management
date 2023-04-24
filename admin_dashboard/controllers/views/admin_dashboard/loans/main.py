@@ -232,7 +232,10 @@ class AdminDashboardLoanDetailView(LoginRequiredMixin, IsAdminViewMixin, View):
         completed_payment = obj.payment_requests_loan.filter(status='completed').aggregate(Sum('amount'))
 
         total_payment = completed_payment['amount__sum']
-        balance = obj.amount - total_payment
+        if total_payment:
+            balance = obj.amount - total_payment
+        else:
+            balance = obj.amount
         context = {
             "page_title": f"Loan: {obj}",
             "menu_section": "admin_dashboard",

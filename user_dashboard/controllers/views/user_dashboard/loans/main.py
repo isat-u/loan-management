@@ -6,6 +6,8 @@ Author: Maayon (maayon@gmail.com)
 Version: 0.0.1
 """
 import datetime
+import decimal
+import math
 from dateutil.relativedelta import relativedelta
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -129,10 +131,12 @@ class UserDashboardLoanCreateView(LoginRequiredMixin, IsUserViewMixin, View):
             data = form.save(commit=False)
             months = data.years * 12
             data.due_date = datetime.date.today() + relativedelta(months=months)
-            data.maturity = data.amount * 0.05
-            data.monthly_amortization = data.amount * 0.03
-            data.yearly_interest = data.amount * 0.05
-            data.monthly_interest = data.yearly_interest / 12
+            data.maturity = round(data.amount * decimal.Decimal(0.05), 2)
+            data.monthly_amortization = round(data.amount * decimal.Decimal(0.03), 2)
+            # data.yearly_interest = round(data.amount * decimal.Decimal(0.05), 2)
+            # data.monthly_interest = round(data.yearly_interest / 12, 2)
+            data.yearly_interest = 0.05
+            data.monthly_interest = 0.0150
             data.account = request.user
             data.is_active = False
             data.created_by = request.user
