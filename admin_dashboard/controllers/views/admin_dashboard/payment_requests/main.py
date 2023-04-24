@@ -5,6 +5,8 @@ Description for Loan Management
 Author: Maayon (maayon@gmail.com)
 Version: 0.0.1
 """
+from django.conf import settings
+from twilio.rest import Client
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http import HttpResponseRedirect
@@ -233,6 +235,17 @@ class AdminDashboardPaymentRequestUpdateView(LoginRequiredMixin, IsAdminViewMixi
             data = form.save(commit=False)
             data.updated_by = request.user
             data = form.save()
+
+            if data.status == 'completed':
+                account_sid = settings.ACCOUNT_SID
+                auth_token = settings.AUTH_TOKEN
+                client = Client(account_sid, auth_token)
+                client.messages.create(
+                    body=f'Hello {data.account}, your payment request amounting {data.amount} last {data.created} has been completed. Thank you.',
+                    from_=settings.FROM_NUMBER,
+                    to=data.phone_number
+                )
+            
             messages.success(
                 request,
                 f'{data} saved!',
