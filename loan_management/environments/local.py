@@ -142,7 +142,8 @@ TOKEN_LIFETIME = 21600  # 6 hours
 ########################################################################################################################
 # EMAIL
 ########################################################################################################################
-EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
+EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+EMAIL_FILE_PATH = os.path.join(BASE_DIR, "sent_emails")
 
 ########################################################################################################################
 # DJANGO REST FRAMEWORK
@@ -322,5 +323,5 @@ DEFAULT_FROM_EMAIL = 'info@fcusronlinevoting.com'
 # TWILIO
 ########################################################################################################################
 ACCOUNT_SID = 'ACeaff37a106ddcc20dd1d0f5924d38e23'
-AUTH_TOKEN = '8bf677737fd1cd2dc5dbfdb582459453'
+AUTH_TOKEN = '0ad5ae7708629eb64f01ec53d2e2bb23'
 FROM_NUMBER = '+16813223242'

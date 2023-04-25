@@ -1,0 +1,25 @@
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Password reset on 192.168.33.66:8000
+From: info@fcusronlinevoting.com
+To: user@local.com
+Date: Tue, 25 Apr 2023 08:44:39 -0000
+Message-ID: <168241227947.3013.5511273490430474477@ubuntu-bionic>
+
+
+You're receiving this email because you requested a password reset for your user account at 192.168.33.66:8000.
+
+Please go to the following page and choose a new password:
+
+http://192.168.33.66:8000/accounts/reset/Mw/bn816f-3fb9822a3069149e610b49958775a75c/
+
+Your username, in case you’ve forgotten: user@local.com
+
+Thanks for using our site!
+
+The 192.168.33.66:8000 team
+
+
+
+-------------------------------------------------------------------------------

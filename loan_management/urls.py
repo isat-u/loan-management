@@ -53,6 +53,7 @@ urlpatterns = [
 
     path('profile/', include('profiles.urls')),
     path('accounts/', include('accounts.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),
     path('locations/', include('locations.urls')),
     path('loans/', include('loans.urls')),
     path('amortizations/', include('amortizations.urls')),
