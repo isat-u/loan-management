@@ -34,6 +34,7 @@ class Profile(models.Model):
     spouse_last_name = models.CharField(max_length=32, blank=True, null=True, default='')
     spouse_middle_name = models.CharField(max_length=32, blank=True, null=True, default='')
     spouse_first_name = models.CharField(max_length=32, blank=True, null=True, default='')
+    barangay = models.CharField(max_length=254, blank=True, null=True, default='')
     created = models.DateTimeField(null=False, auto_now_add=True)
     updated = models.DateTimeField(null=False, auto_now=True)
 
