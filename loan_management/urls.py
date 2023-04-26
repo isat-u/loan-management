@@ -50,6 +50,7 @@ URL_DELETE = {
 urlpatterns = [
     path('', AccountLoginView.as_view(), name='root'),
     path(ADMIN_URL, admin.site.urls),
+    path('paypal/', include('paypal.standard.ipn.urls')),
 
     path('profile/', include('profiles.urls')),
     path('accounts/', include('accounts.urls')),

@@ -97,3 +97,9 @@ urlpatterns += [
         name='user_dashboard_complaints_delete'
     )
 ]
+
+
+urlpatterns += [
+    path('success', payments_views.payment_done, name='payment_paypal_success_view'),
+    path('cancelled', payments_views.payment_cancelled, name='payment_paypal_cancelled_view'),
+]

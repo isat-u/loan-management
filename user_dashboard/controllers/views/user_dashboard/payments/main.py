@@ -5,9 +5,10 @@ Description for Loan Management
 Author: Maayon (maayon@gmail.com)
 Version: 0.0.1
 """
+import math
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
@@ -19,6 +20,7 @@ from django.dispatch import receiver
 from paypal.standard.ipn.signals import valid_ipn_received
 from paypal.standard.forms import PayPalPaymentsForm
 
+from accounts.models.account.constants import USER, SUPERADMIN, ADMIN
 from accounts.mixins.user_type_mixins import IsUserViewMixin
 from accounts.models import Account
 from loans.models import Loan
@@ -178,13 +180,15 @@ class UserDashboardPaymentRequestCreateView(LoginRequiredMixin, IsUserViewMixin,
                     "item_name": 'Loan Payment',
                     "invoice": payment_history.invoice_number,
                     "currency_code": "PHP",
-                    "notify_url": request.build_absolute_uri(reverse('paypal-ipn')),
+                    # "notify_url": request.build_absolute_uri(reverse('paypal-ipn')),
                     "return": return_url,
                     "cancel_return": cancel_url,
                     "custom": request.user.email,  # Custom command to correlate to some function later (optional)
                 }
-
+                print('*****************************************')
+                print(paypal_dict)
                 paypal_form = PayPalPaymentsForm(initial=paypal_dict, button_type="donate")
+                print(paypal_form)
                 context = {
                     'page_title': 'Loan Management',
                     'amount': data.amount,
@@ -193,9 +197,9 @@ class UserDashboardPaymentRequestCreateView(LoginRequiredMixin, IsUserViewMixin,
                     'paypal_form': paypal_form,
                 }
 
-                if data.payment_source == 'paypal':
-                    return render(request, 'user_dashboard/paypal/process.html', context)
-                return HttpResponseRedirect(next)
+                # if data.payment_source == 'paypal':
+                return render(request, 'user_dashboard/paypal/process.html', context)
+                # return HttpResponseRedirect(next)
 
             elif data.payment_source == 'cash' or data.payment_source == 'gcash':
                 invoice = payment_history.invoice_number
@@ -440,6 +444,82 @@ def ipn_receiver(sender, **kwargs):
             user = Account.objects.get(email=ipn_obj.custom)
             user.is_verified = True
             user.save()
+
+    if history:
+        history.status = ipn_obj.payment_status
+        history.save()
+
+
+def correct_user_check(user):
+    return user.user_type in [SUPERADMIN, ADMIN, USER]
+
+
+# PayPal
+@csrf_exempt
+def payment_done(request):
+    if request.user.is_authenticated:
+        user = request.user
+
+        if not 'invoice' in request.GET:
+            return payment_cancelled()
+
+        try:
+            payment_history = PaymentHistory.objects.get(invoice_number=request.GET.get('invoice'))
+        except PaymentHistory.DoesNotExist:
+            return payment_cancelled()
+
+        payment_history.status = 'COMPLETED'
+        payment_history.save()
+
+        try:
+            context = {
+                'page_title': 'Thank you',
+                'user': user,
+            }
+            return render(request, 'user_dashboard/paypal/success.html', context)
+        except Exception as e:
+            return HttpResponseRedirect(reverse('page_404'))
+    return HttpResponseRedirect(reverse('home_login_view'))
+
+
+def payment_cancelled(request, *args, **kwargs):
+    if 'invoice' in request.GET:
+        invoice = request.GET.get('invoice')
+        print(invoice)
+        payment_history = PaymentHistory.objects.get(invoice_number=invoice)
+        payment_history.status = 'CANCELLED'
+        payment_history.save()
+
+    return render(request, 'user_dashboard/paypal/failed.html')
+
+
+@receiver(valid_ipn_received)
+def ipn_receiver(sender, **kwargs):
+    # TODO:
+    # connect this to PaymentHistory
+    ipn_obj = sender
+    history = None
+    ipn_data = PaypalIPNCustomSerializer(ipn_obj)
+
+    try:
+        history = PaymentHistory.objects.get(invoice_number=ipn_obj.invoice)
+        history.provider_data = ipn_data.data
+
+    except PaymentHistory.DoesNotExist:
+        PaymentHistoryError.objects.create(
+            payment_source='paypal',
+            reason='Invoice does not exist',
+            provider_data=ipn_data.data,
+            invoice_number=ipn_obj.invoice
+        )
+
+    if ipn_obj.txn_type == 'web_accept':
+        if ipn_obj.payment_status == ST_PP_COMPLETED:
+            # payment was successful
+            user = Account.objects.get(email=ipn_obj.custom)
+            user.is_verified = True
+            user.save()
+
 
     if history:
         history.status = ipn_obj.payment_status

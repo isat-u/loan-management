@@ -308,8 +308,8 @@ CHANNEL_LAYERS = {
 ########################################################################################################################
 # Paypal
 ########################################################################################################################
-PAYPAL_IDENTITY_TOKEN = "RqA9_K6u56_gYv9Q6b1uWu5enylAahmagYsiJ6kbXUllOdROBJ3S2knTVny"
-PAYPAL_RECEIVER_EMAIL = 'icare-facilitator@pilantropo.com'
+PAYPAL_IDENTITY_TOKEN = "AQfY1KxzrVB9QHJFDG2_Nc21EJwkp616_zGvj6lhfgKp5CceOtKUZK_sY7dcsDnncPXPNq08MSAIfsAM"
+PAYPAL_RECEIVER_EMAIL = 'sb-x5g7v25723148@business.example.com'
 PAYPAL_TEST = True
 
 ########################################################################################################################
