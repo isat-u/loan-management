@@ -4,7 +4,7 @@ from .models import Complaint
 
 
 class ComplaintAdmin(admin.ModelAdmin):
-    list_display = ['id', 'created']
+    list_display = ['id', 'type', 'content', 'response', 'status', 'created']
     list_filter = ['id']
     search_fields = ['id']
     ordering = ['-created']

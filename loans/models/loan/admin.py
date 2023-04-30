@@ -4,7 +4,7 @@ from .models import Loan
 
 
 class LoanAdmin(admin.ModelAdmin):
-    list_display = ['id', 'created']
+    list_display = ['id', 'account', 'type', 'amount', 'is_active', 'created']
     list_filter = ['id']
     search_fields = ['id']
     ordering = ['-created']
