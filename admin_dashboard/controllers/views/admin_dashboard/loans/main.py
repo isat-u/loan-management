@@ -79,7 +79,7 @@ class AdminDashboardLoanListView(LoginRequiredMixin, IsAdminViewMixin, View):
     """
 
     def get(self, request, *args, **kwargs):
-        obj_list = Master.objects.all()
+        obj_list = Master.objects.actives()
         paginator = Paginator(obj_list, 50)
         page = request.GET.get('page')
         objs = paginator.get_page(page)
@@ -358,7 +358,8 @@ class AdminDashboardLoanDeleteView(LoginRequiredMixin, IsAdminViewMixin, View):
             extra_tags='success'
         )
 
-        obj.delete()
+        obj.is_active = False
+        obj.save()
 
         return HttpResponseRedirect(
             reverse(

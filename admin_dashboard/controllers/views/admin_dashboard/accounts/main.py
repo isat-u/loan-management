@@ -76,7 +76,7 @@ class AdminDashboardAccountListView(LoginRequiredMixin, IsAdminViewMixin, View):
 
     def get(self, request, *args, **kwargs):
         member_type = kwargs.get('member_type', 0)
-        obj_list = Master.objects.filter(user_type__in=[USER], is_member=member_type)
+        obj_list = Master.objects.filter(user_type__in=[USER], is_member=member_type, is_active=True).order_by('-created')
         paginator = Paginator(obj_list, 50)
         page = request.GET.get('page')
         objs = paginator.get_page(page)
@@ -320,10 +320,14 @@ class AdminDashboardAccountDeleteView(LoginRequiredMixin, IsAdminViewMixin, View
             extra_tags='success'
         )
 
-        obj.delete()
+        obj.is_active = False
+        obj.save()
 
         return HttpResponseRedirect(
             reverse(
-                'admin_dashboard_accounts_list'
+                'admin_dashboard_accounts_list',
+                kwargs={
+                    'member_type': 1
+                }
             )
         )
