@@ -47,8 +47,8 @@
                             <div class="row no-gutters align-items-center">
                                 {% for loan in loan_summary %}
                                 <div class="col-md-3">
-                                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1 text-nowrap">{{ loan.loan_type.name }}</div>
-                                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ loan.count }}</div>
+                                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1 text-center">{{ loan.loan_type.name }}</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800 text-center">{{ loan.count }}</div>
                                 </div>
                                 {% endfor %}
                             </div>
