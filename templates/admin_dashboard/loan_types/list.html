@@ -23,7 +23,7 @@
     <div class="card">
         <div class="card-body">
             {% if messages %} {% for m in messages %} 
-                <div class="alert alert-{{ m.tags }}">{{ m }}</div>
+                <div class="alert alert-{{ m.extra_tags }}">{{ m }}</div>
             {% endfor %} {% endif %} 
             <div class="table-responsive">
                 <table class="table">

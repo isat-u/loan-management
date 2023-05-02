@@ -14,7 +14,7 @@
                 </div>
                 <div class="card-body">
                     {% if messages %} {% for m in messages %}
-                        <div class="alert alert-{{ m.tags }}">{{ m }}</div>
+                        <div class="alert alert-{{ m.extra_tags }}">{{ m }}</div>
                     {% endfor %} {% endif %}
                     <form method="post">
                         {% csrf_token %}
