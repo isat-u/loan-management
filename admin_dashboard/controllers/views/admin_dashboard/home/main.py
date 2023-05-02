@@ -31,7 +31,7 @@ class AdminDashboardHomeView(LoginRequiredMixin, IsAdminViewMixin, View):
     """
 
     def get(self, request, *args, **kwargs):
-        users = Account.objects.all()
+        users = Account.objects.filter(user_type=USER)
         loans = Loan.objects.all()
         loan_types = LoanType.objects.all()
         loan_summary = []
