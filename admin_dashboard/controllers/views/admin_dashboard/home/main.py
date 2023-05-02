@@ -36,6 +36,7 @@ class AdminDashboardHomeView(LoginRequiredMixin, IsAdminViewMixin, View):
         loan_types = LoanType.objects.all()
         loan_summary = []
         payment_requests = PaymentRequest.objects.filter(status='pending')
+        pending_loans = loans.filter(is_active=False)
 
         for loan_type in loan_types:
             data = {'loan_type': loan_type, 'count': loans.filter(type=loan_type).count()}
@@ -50,6 +51,7 @@ class AdminDashboardHomeView(LoginRequiredMixin, IsAdminViewMixin, View):
             "loans": loans,
             "loan_summary": loan_summary,
             "payment_requests": payment_requests,
+            "pending_loans": pending_loans,
         }
 
         return render(request, "admin_dashboard/home/home.html", context)

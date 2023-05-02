@@ -65,6 +65,49 @@
             <div class="card shadow mb-4">
                 <div class="card-header py-4">
                     <h6 class="m-0 font-weight-bold text-primary">
+                        <a href="{% url 'admin_dashboard_accounts_list' 1 %}">Pending Loans</a>
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th class="text-right">Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for obj in pending_loans %}
+                                <tr>
+                                    <td>{{ obj.created|date:"M d, Y" }}</td>
+                                    <td>{{ obj.name }}</td>
+                                    <td>{{ obj.type }}</td>
+                                    <td>{{ obj.amount|floatformat:2|intcomma }}</td>
+                                    <td class="font-weight-bold {% if obj.is_active == 'pending' %}text-warning {% else %}text-primary{% endif %}">{{ obj.is_active|title }}</td>
+                                    <td class="td-actions text-right">
+                                        <a class="btn btn-info btn-sm btn-icon" href="{% url 'admin_dashboard_payment_requests_detail' obj.pk %}" title="Details">
+                                            <i class="tim-icons icon-badge"></i>
+                                        </a>
+                                        <a class="btn btn-success btn-sm btn-icon" href="{% url 'admin_dashboard_loans_approve' obj.pk %}" title="Update">
+                                            <i class="tim-icons icon-check-2"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card shadow mb-4">
+                <div class="card-header py-4">
+                    <h6 class="m-0 font-weight-bold text-primary">
                         <a href="{% url 'admin_dashboard_accounts_list' 1 %}">Pending Payments</a>
                     </h6>
                 </div>
