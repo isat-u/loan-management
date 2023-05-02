@@ -19,4 +19,5 @@ class LoanForm(ModelForm):
             'due_date': widgets.DateInput(attrs={'type': 'date'})
         }
     
+    amount = forms.IntegerField(validators=[MinValueValidator(1)])
     years = forms.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(3)])
