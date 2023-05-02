@@ -12,5 +12,5 @@ LOAN_INTERESTS = {
             "yearly_interest": 0.2775,
             "monthly_interest": 0.015,
         },
-    }
+    },
 }
