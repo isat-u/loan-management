@@ -88,6 +88,7 @@
                         <th>Source</th>
                         <th class="text-right">Amount</th>
                         <th>Status</th>
+                        <th>Actions</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -98,6 +99,11 @@
                             <td>{{ payment.payment_source|title }}</td>
                             <td class="text-right">{{ payment.amount|floatformat:2|intcomma  }}</td>
                             <td>{{ payment.status|title }}</td>
+                            <td>
+                                <a class="btn btn-info btn-sm btn-icon" href="{% url 'admin_dashboard_payment_requests_detail' payment.pk %}">
+                                    <i class="tim-icons icon-badge"></i>
+                                </a>
+                            </td>
                         </tr>
                     {% endfor %}
                     {% else %}

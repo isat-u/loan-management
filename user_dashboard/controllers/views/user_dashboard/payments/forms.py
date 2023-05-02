@@ -19,6 +19,7 @@ class PaymentRequestForm(forms.ModelForm):
         fields = [
             'payment_source',
             'phone_number',
+            'attachment',
             'amount',
             'account',
             'loan',
