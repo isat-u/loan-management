@@ -135,12 +135,13 @@ class AdminDashboardLoanCreateView(LoginRequiredMixin, IsAdminViewMixin, View):
 
         if form.is_valid():
             loan_type = form.cleaned_data['type']
+            loan_type = LoanType.objects.get(pk=loan_type)
             loan_years = form.cleaned_data['years'] if form.cleaned_data['years'] is not None else 1
-            loan_details = LOAN_INTERESTS.get(f'{loan_type}')[loan_years]
 
             data = form.save(commit=False)
-            data.yearly_interest = loan_details.get('yearly_interest')
-            data.monthly_interest = loan_details.get('monthly_interest')
+            data.yearly_interest = loan_type.meta.get(f'{loan_years}')['yearly_interest']
+            data.monthly_interest = loan_type.meta.get(f'{loan_years}')['monthly_interest']
+
             data.due_date = date.today()
             data.created_by = request.user
             data.save()

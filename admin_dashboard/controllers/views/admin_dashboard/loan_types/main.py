@@ -119,11 +119,22 @@ class AdminDashboardLoanTypeCreateView(LoginRequiredMixin, IsAdminViewMixin, Vie
     
     def post(self, request, *args, **kwargs):
         form = MasterForm(data=request.POST)
+        counter = request.POST.get('counter', 0)
+        meta = {}
+
+        if counter:
+            for count in range(int(counter)):
+                meta[request.POST.get(f"years_{count}")] = {
+                    "yearly_interest": request.POST.get(f"yearly_{count}", 0),
+                    "monthly_interest": request.POST.get(f"monthly_{count}", 0),
+               }
 
         if form.is_valid():
             data = form.save(commit=False)
             data.created_by = request.user
+            data.meta = meta
             data.save()
+            
             messages.success(
                 request,
                 f'{data} saved!',

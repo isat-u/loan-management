@@ -22,6 +22,7 @@ from accounts.mixins.user_type_mixins import IsUserViewMixin
 from accounts.models.account.models import Account
 
 from loans.models.loan.models import Loan as Master
+from loans.models.loan_type.models import LoanType
 from user_dashboard.controllers.views.user_dashboard.loans.forms import LoanForm as MasterForm
 
 """
@@ -129,14 +130,16 @@ class UserDashboardLoanCreateView(LoginRequiredMixin, IsUserViewMixin, View):
         form = MasterForm(data=request.POST)
         if form.is_valid():
             data = form.save(commit=False)
-            months = data.years * 12
+            loan_type = form.cleaned_data['type']
+            loan_type = LoanType.objects.get(pk=loan_type.pk)
+            loan_years = form.cleaned_data['years'] if form.cleaned_data['years'] is not None else 1
+            months = loan_years * 12
             data.due_date = datetime.date.today() + relativedelta(months=months)
             data.maturity = round(data.amount * decimal.Decimal(0.05), 2)
             data.monthly_amortization = round(data.amount * decimal.Decimal(0.03), 2)
-            # data.yearly_interest = round(data.amount * decimal.Decimal(0.05), 2)
-            # data.monthly_interest = round(data.yearly_interest / 12, 2)
-            data.yearly_interest = 0.05
-            data.monthly_interest = 0.0150
+            data.yearly_interest = loan_type.meta.get(f'{loan_years}')['yearly_interest']
+            data.monthly_interest = loan_type.meta.get(f'{loan_years}')['monthly_interest']
+
             data.account = request.user
             data.is_active = False
             data.created_by = request.user

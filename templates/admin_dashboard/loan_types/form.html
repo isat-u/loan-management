@@ -20,7 +20,11 @@
                         {% csrf_token %}
 
                         {{ form|crispy }}
+                        <input id="counter" type="hidden" name="counter" value="0" />
+                        <div id="input-container" class="mb-4 mx-1">
+                        </div>
                         <p>
+                            <button type="button" class="btn btn-success animation-on-hover" id="add-field-button">Add Field</button>
                             <button type="submit" class="btn btn-success animation-on-hover">
                                 Submit
                             </button>
@@ -35,4 +39,47 @@
 {% endblock %}
 
 {% block scripts %}
+<script>
+    const form = document.getElementById('my-form');
+    const inputContainer = document.getElementById('input-container');
+    const addFieldButton = document.getElementById('add-field-button');
+    let counter = document.getElementById('counter');
+    let fieldCounter = 0;
+    function handleClick() {
+        const newInput = document.createElement('div');
+        
+        newInput.innerHTML = `
+            <div class="row" id="field_${fieldCounter}">
+                <div class="col-md-2">
+                    <input class="textinput textInput form-control mb-4" name="years_${fieldCounter}" placeholder="Years"  />
+                </div>
+                <div class="col-md-4">
+                    <input class="textinput textInput form-control mb-4" name="monthly_${fieldCounter}" placeholder="Monthly Interest"  />
+                </div>
+                <div class="col-md-4">
+                    <input class="textinput textInput form-control mb-4" name="yearly_${fieldCounter}" placeholder="Yearly Interest"  />
+                </div>
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-danger" data-field="${fieldCounter}">Delete</button>
+                </div>
+            </div>
+        `;
+        inputContainer.appendChild(newInput);
+        fieldCounter++; 
+        counter.value = fieldCounter;
+    }
+
+    function handleDeleteClick(e) {
+        if (e.target.tagName === 'BUTTON') {
+          const fieldToDelete = e.target.getAttribute('data-field');
+          const inputToDelete = document.querySelector(`[id="field_${fieldToDelete}"]`);
+          inputContainer.removeChild(inputToDelete.parentElement);
+          fieldCounter--;
+          counter.value = fieldCounter;
+        }
+      }
+
+    addFieldButton.addEventListener('click', handleClick);
+    inputContainer.addEventListener('click', handleDeleteClick);
+  </script>
 {% endblock %}
