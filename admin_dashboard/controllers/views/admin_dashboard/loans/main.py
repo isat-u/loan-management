@@ -7,6 +7,7 @@ Version: 0.0.1
 """
 from datetime import date
 from decimal import Decimal
+from dateutil.relativedelta import relativedelta
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -83,14 +84,15 @@ class AdminDashboardLoanListView(LoginRequiredMixin, IsAdminViewMixin, View):
         paginator = Paginator(obj_list, 50)
         page = request.GET.get('page')
         objs = paginator.get_page(page)
-
+        today = date.today()
         context = {
             "page_title": f"Loans",
             "menu_section": "admin_dashboard",
             "menu_subsection": "loan",
             "menu_action": "list",
             "paginator": paginator,
-            "objects": objs
+            "objects": objs,
+            "today": today,
         }
 
         return render(request, "admin_dashboard/loans/list.html", context)
@@ -132,23 +134,60 @@ class AdminDashboardLoanCreateView(LoginRequiredMixin, IsAdminViewMixin, View):
 
     def post(self, request, *args, **kwargs):
         form = MasterForm(data=request.POST)
-
+        context = {
+            "page_title": "Create new Loan",
+            "menu_section": "admin_dashboard",
+            "menu_subsection": "loan",
+            "menu_action": "create",
+            "form": form
+        }
+            
         if form.is_valid():
-            loan_type = form.cleaned_data['type']
-            loan_type = LoanType.objects.get(pk=loan_type)
-            loan_years = form.cleaned_data['years'] if form.cleaned_data['years'] is not None else 1
-
             data = form.save(commit=False)
-            data.yearly_interest = loan_type.meta.get(f'{loan_years}')['yearly_interest']
-            data.monthly_interest = loan_type.meta.get(f'{loan_years}')['monthly_interest']
+            loan_type = form.cleaned_data['type']
+            loan_type = LoanType.objects.get(pk=loan_type.pk)
+            loan_months = form.cleaned_data['months'] if form.cleaned_data['months'] is not None else 1
+            
+            try:
+                maximum_amount = loan_type.meta.get(f'{loan_months}')['maximum_amount']
+            except:
+                messages.error(
+                    request,
+                    f'No loan type details for {loan_months} months transaction.',
+                    extra_tags='danger'
+                )
+                return render(request, "admin_dashboard/loans/form.html", context)
 
-            data.due_date = date.today()
+            if  decimal.Decimal(form.cleaned_data['amount']) > decimal.Decimal(maximum_amount):
+                messages.error(
+                    request,
+                    f'The amount exceeds the maximum loan amount of {maximum_amount}',
+                    extra_tags='danger'
+                )
+                return render(request, "admin_dashboard/loans/form.html", context)
+            
+            fee = loan_type.meta.get(f'{loan_months}')['fee']
+            data.amount += decimal.Decimal(data.amount) * (decimal.Decimal(fee) / 100)
+
+            if(data.account.is_member):
+                data.yearly_interest = loan_type.meta.get(f'{loan_months}')['yearly_reg']
+                data.monthly_interest = loan_type.meta.get(f'{loan_months}')['monthly_reg']
+            else:
+                data.yearly_interest = loan_type.meta.get(f'{loan_months}')['yearly_aso']
+                data.monthly_interest = loan_type.meta.get(f'{loan_months}')['monthly_aso']
+                
+            months = loan_months
+            data.due_date = datetime.date.today() + relativedelta(months=months)
+            
+            monthly_amortization = (decimal.Decimal(data.monthly_interest) / 12) / 100
+            data.maturity = round(data.amount * decimal.Decimal(0.05), 2)
+            data.monthly_amortization = round(data.amount * monthly_amortization, 2)
             data.created_by = request.user
             data.save()
 
             # generate amortization
             amount = Decimal(data.amount)
-            months = data.years * 12
+            months = data.months
             monthly_interest = Decimal(data.monthly_interest)
             ideal_principal = amount / months
             ideal_balance = amount
@@ -157,17 +196,14 @@ class AdminDashboardLoanCreateView(LoginRequiredMixin, IsAdminViewMixin, View):
 
             for month in range(months):
                 month += 1
-                ideal_interest = ideal_balance * monthly_interest
+                ideal_interest = ideal_balance * (monthly_interest / 100)
                 ideal_balance = ideal_balance - ideal_principal
                 ideal_monthly_amortization = ideal_principal + ideal_interest
-                print(
-                    f'{month} - {ideal_principal}, {ideal_interest:.2f}, {ideal_monthly_amortization}, {ideal_balance}')
 
-                actual_interest = actual_balance * monthly_interest
+                actual_interest = actual_balance * (monthly_interest / 100)
                 actual_principal = actual_monthly_amortization - actual_interest
                 actual_balance = actual_balance - actual_principal
-                print(
-                    f'{month} - {actual_principal}, {actual_interest:.2f}, {actual_monthly_amortization}, {actual_balance}')
+
                 Amortization.objects.create(
                     month=month,
                     ideal_principal=ideal_principal,
@@ -231,7 +267,8 @@ class AdminDashboardLoanDetailView(LoginRequiredMixin, IsAdminViewMixin, View):
     def get(self, request, *args, **kwargs):
         obj = get_object_or_404(Master, pk=kwargs.get('loan', None))
         completed_payment = obj.payment_requests_loan.filter(status='completed').aggregate(Sum('amount'))
-
+        obj.monthly_interest /= 100
+        obj.yearly_interest /= 100
         total_payment = completed_payment['amount__sum']
         if total_payment:
             balance = obj.amount - total_payment
@@ -399,13 +436,18 @@ class AdminDashboardLoanApproveView(LoginRequiredMixin, IsAdminViewMixin, View):
 
     def post(self, request, *args, **kwargs):
         obj = get_object_or_404(Master, pk=kwargs.get('loan', None))
+        current_date = date.today()
+        new_date = current_date + relativedelta(months=1)
 
         messages.success(
             request,
             f'{obj} approved!',
             extra_tags='success'
         )
-
+        obj.meta = {
+            'approved_date': current_date.strftime("%B %d, %Y")
+        }
+        obj.due_date = new_date
         obj.is_active = True
         obj.save()
 

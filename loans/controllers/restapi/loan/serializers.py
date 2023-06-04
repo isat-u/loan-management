@@ -26,7 +26,7 @@ class LoanPrivateSerializer(serializers.ModelSerializer):
             'uuid',
             'maturity',
             'due_date',
-            'years',
+            'months',
             'monthly_amortization',
             'monthly_interest',
             'yearly_interest',

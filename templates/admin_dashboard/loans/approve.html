@@ -24,11 +24,11 @@
 
                         {{ form|crispy }}
                         <button class="btn btn-success animation-on-hover" type="submit">
-                            Yes I am, approve {{ obj }}
+                            Approve {{ obj }}
                         </button>
                         <a class="btn btn-secondary animation-on-hover"
                            href="{% url 'admin_dashboard_loans_list' %}">
-                            No, I changed my mind
+                            Decline
                         </a>
                     </form>
                 </div>

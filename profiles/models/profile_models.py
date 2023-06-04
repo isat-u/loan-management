@@ -40,12 +40,6 @@ class Profile(models.Model):
 
     # Relationship Fields
     gender = models.ForeignKey(Gender, related_name='gender_profiles', on_delete=models.SET_NULL, null=True, blank=True)
-    region = models.ForeignKey('locations.Region', blank=True, default=6, null=False, on_delete=models.CASCADE,
-                               related_name='region_profiles')
-    province = models.ForeignKey('locations.Province', blank=True, default=22, null=False, on_delete=models.CASCADE,
-                                 related_name='province_profiles')
-    city = models.ForeignKey('locations.City', blank=True, default=388, null=False, on_delete=models.CASCADE,
-                             related_name='province_profiles')
     account = models.OneToOneField(
         'accounts.Account',
         on_delete=models.CASCADE,

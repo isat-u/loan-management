@@ -40,7 +40,7 @@ class Loan(models.Model):
     # === Properties ===
     maturity = models.CharField(max_length=64, null=True, blank=True)
     due_date = models.DateField(null=False)
-    years = models.PositiveSmallIntegerField(null=True, blank=True)
+    months = models.PositiveSmallIntegerField(null=True, blank=True)
     monthly_amortization = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     yearly_interest = models.DecimalField(max_digits=6, decimal_places=4, null=True, blank=True)
     monthly_interest = models.DecimalField(max_digits=6, decimal_places=4, null=True, blank=True)

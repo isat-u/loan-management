@@ -5,6 +5,7 @@ Description for Loan Management
 Author: Maayon (maayon@gmail.com)
 Version: 0.0.1
 """
+import json
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http import HttpResponseRedirect
@@ -118,15 +119,20 @@ class AdminDashboardLoanTypeCreateView(LoginRequiredMixin, IsAdminViewMixin, Vie
         return render(request, "admin_dashboard/loan_types/form.html", context)
     
     def post(self, request, *args, **kwargs):
-        form = MasterForm(data=request.POST)
+        form = MasterForm(data=request.POST, files=request.FILES)
         counter = request.POST.get('counter', 0)
         meta = {}
 
         if counter:
             for count in range(int(counter)):
-                meta[request.POST.get(f"years_{count}")] = {
-                    "yearly_interest": request.POST.get(f"yearly_{count}", 0),
-                    "monthly_interest": request.POST.get(f"monthly_{count}", 0),
+                meta[request.POST.get(f"months_{count}")] = {
+                    "maximum_amount": request.POST.get(f"maximum_amount_{count}", 0),
+                    "penalty": request.POST.get(f"penalty_{count}", 0),
+                    "fee": request.POST.get(f"fee_{count}", 0),
+                    "monthly_reg": request.POST.get(f"monthly_reg_{count}", 0),
+                    "yearly_reg": request.POST.get(f"yearly_reg_{count}", 0),
+                    "monthly_aso": request.POST.get(f"monthly_aso_{count}", 0),
+                    "yearly_aso": request.POST.get(f"yearly_aso_{count}", 0),
                }
 
         if form.is_valid():
@@ -213,25 +219,41 @@ class AdminDashboardLoanTypeUpdateView(LoginRequiredMixin, IsAdminViewMixin, Vie
     def get(self, request, *args, **kwargs):
         obj = get_object_or_404(Master, pk=kwargs.get('loan_type', None))
         form = MasterForm(instance=obj)
-
+        meta_string = json.dumps(obj.meta)
         context = {
             "page_title": f"Update Loan Type: {obj}",
             "menu_section": "admin_dashboard",
             "menu_subsection": "loan_type",
             "menu_action": "update",
             "obj": obj,
-            "form": form
+            "form": form,
+            "meta_string": meta_string
         }
 
         return render(request, "admin_dashboard/loan_types/form.html", context)
     
     def post(self, request, *args, **kwargs):
         obj = get_object_or_404(Master, pk=kwargs.get('loan_type', None))
-        form = MasterForm(instance=obj, data=request.POST)
+        form = MasterForm(instance=obj, data=request.POST, files=request.FILES)
 
+        counter = request.POST.get('counter', 0)
+        meta = {}
+
+        if counter:
+            for count in range(int(counter)):
+                meta[request.POST.get(f"months_{count}")] = {
+                    "maximum_amount": request.POST.get(f"maximum_amount_{count}", 0),
+                    "penalty": request.POST.get(f"penalty_{count}", 0),
+                    "fee": request.POST.get(f"fee_{count}", 0),
+                    "monthly_reg": request.POST.get(f"monthly_reg_{count}", 0),
+                    "yearly_reg": request.POST.get(f"yearly_reg_{count}", 0),
+                    "monthly_aso": request.POST.get(f"monthly_aso_{count}", 0),
+                    "yearly_aso": request.POST.get(f"yearly_aso_{count}", 0),
+               }
         if form.is_valid():
             data = form.save(commit=False)
             data.updated_by = request.user
+            data.meta = meta
             data = form.save()
             messages.success(
                 request,

@@ -37,7 +37,7 @@ class ApiPublicLoanTypeListDetail(viewsets.ReadOnlyModelViewSet):
 # Private
 ###############################################################################
 class ApiPrivateLoanTypeViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAdminUser]
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = PrivateSerializer
     model = Master
 
@@ -50,7 +50,7 @@ class ApiPrivateLoanTypeViewSet(viewsets.ModelViewSet):
         
         return self.model.objects.filter(**filters)
     
-    @swagger_auto_schema(operation_description="Create Loan Type", request_body=CreateSerializer")
+    @swagger_auto_schema(operation_description="Create Loan Type", request_body=CreateSerializer)
     def create(self, request, *args, **kwargs):
         serializer = CreateSerializer(data=request.data)
 

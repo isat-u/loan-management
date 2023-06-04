@@ -45,6 +45,3 @@ urlpatterns = [
     ),
 ]
 
-"""
-Add to urls.py urlpatterns:
-    path('loan_type/api/', include('loans.controllers.restapi.loan_type.urls'))

@@ -13,9 +13,9 @@
                     <h2 class="card-title">{{ page_title }}</h2>
                 </div>
                 <div class="card-body">
-                    {% if messages %} {% for m in messages %}
+                    {% if messages %} {% for m in messages %} 
                         <div class="alert alert-{{ m.extra_tags }}">{{ m }}</div>
-                    {% endfor %} {% endif %}
+                    {% endfor %} {% endif %} 
                     <form method="post">
                         {% csrf_token %}
 

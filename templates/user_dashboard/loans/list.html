@@ -31,6 +31,8 @@
                     <tr>
                         <th>Name</th>
                         <th>Amount</th>
+                        <th>Due Date</th>
+                        <th>Status</th>
                         <th class="text-right">Actions</th>
                     </tr>
                     </thead>
@@ -69,27 +71,35 @@
         $(document).ready(function () {
             const url = `{% url 'user_loans' %}?account={{ user.pk }}`
             $.get(url, function(data, status) {
-                console.log(data);
-                console.log({{user.pk}});
 
                 let tableData = '';
                 $.each(data.results, function(index, value) {
                     let updateUrl = "{% url 'user_dashboard_loans_detail' 0 %}".replace(/0/, value.id);
                     let paymentUrl = "{% url 'user_dashboard_payments_create' 0 1 %}".replace(/1/, value.id).replace(/0/, {{user.pk}});
+                    let textColor = '';
+
+                    const date = new Date(value.due_date);
+                    const currentDate = new Date();
+                    const options = { month: 'long', day: 'numeric', year: 'numeric' };
+                    const formattedDate = date.toLocaleDateString('en-US', options);
+
+                    if(date < currentDate) {
+                        textColor = 'text-danger'
+                    }
                     tableData = tableData + `
                         <tr>
                             <td>${value.type.name}</td>
                             <td>${value.amount}</td>
+                            <td class="${textColor}">${formattedDate}</td>
+                            <td>${value.is_active ? 'Active' : 'Pending'}</td>
                             <td class="td-actions text-right">
                                 <a class="btn btn-info btn-sm btn-icon"
                                    href="${updateUrl}" title="View Details">
                                     <i class="tim-icons icon-badge"></i>
                                 </a>
-                                <a class="btn btn-primary btn-sm btn-icon"
-                                   href="${paymentUrl}" title="Pay"><i
-                                        class="tim-icons icon-money-coins"></i>
-                                </a>
-                                <button type="button" class="btn btn-sm btn-secondary btn-icon" title="computation" data-toggle="modal" data-target="#exampleModal" onclick="showModalContent(this)" data-amount="${value.amount}" data-monthly-interest="${value.monthly_interest}" data-monthly-amortization="${value.monthly_amortization}" data-years="${value.years}">
+                                ${value.is_active ? '<a class="btn btn-primary btn-sm btn-icon" href="' + paymentUrl + '" title="Pay"><i class="tim-icons icon-money-coins"></i></a>' : ''}
+                                
+                                <button type="button" class="btn btn-sm btn-secondary btn-icon" title="computation" data-toggle="modal" data-target="#exampleModal" onclick="showModalContent(this)" data-amount="${value.amount}" data-monthly-interest="${value.monthly_interest}" data-monthly-amortization="${value.monthly_amortization}" data-months="${value.months}">
                                   <i class="tim-icons icon-book-bookmark"></i>
                                 </button>
                             </td>
@@ -107,12 +117,13 @@
             let amount = button.dataset.amount;
             let monthlyInterest = button.dataset.monthlyInterest;
             let monthlyAmortization = button.dataset.monthlyAmortization;
-            let years = button.dataset.years;
-            let months = years * 12;
+            let months = button.dataset.months;
             let tableRows = '';
             let principal = parseFloat(amount);
             let balance =  parseFloat(amount);
             var modalBody = document.querySelector('.modal-body');
+            
+            if (monthlyInterest > 1) monthlyInterest /= 100;
 
             for (var i = 1; i <= months; i++) {
                 let interest = balance * monthlyInterest;

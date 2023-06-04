@@ -1,0 +1,181 @@
+{% extends 'admin_dashboard/base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block header_css %}
+ <link rel="stylesheet" type="text/css"
+          href="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.18/b-1.5.6/b-colvis-1.5.6/b-flash-1.5.6/b-html5-1.5.6/b-print-1.5.6/datatables.min.css"/>
+
+{% endblock %}
+
+{% block header_js %}
+{% endblock %}
+
+{% block page_wrapper_contents %}
+  <div class="card mb-3">
+    <div class="card-header">
+      <h4 class="card-title float-left">{{ page_title }}</h4>
+    </div>
+    <div class="card-body">
+      <nav aria-label="breadcrumb" role="navigation">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'admin_dashboard_home_view' %}">Home</a></li>
+          <li class="breadcrumb-item active" aria-current="page">{{ page_title }}</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      {% if messages %} {% for m in messages %}
+        <div class="alert alert-{{ m.extra_tags }}">{{ m }}</div>
+      {% endfor %} {% endif %}
+      <div class="row">
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="status_filter">Status:</label>
+            <select id="status_filter">
+              <option value="Pending">Pending</option>
+              <option value="Completed">Completed</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="start_date">Start Date:</label>
+            <input type="date" id="start_date">
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="end_date">End Date:</label>
+            <input type="date" id="end_date">
+          </div>
+        </div>
+      </div>
+      <div class="table-responsive">
+        <table class="table datatable">
+          <thead>
+            <tr>
+              <th>Payment Date</th>
+              <th>Account</th>
+              <th>Name</th>
+              <th>Loan</th>
+              <th>Loan Amount</th>
+              <th>Source</th>
+              <th>Amount</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for obj in objects %}
+            <tr>
+              <td>{{ obj.created|date:"Y-m-d" }}</td>
+              <td>{{ obj.account|title }}</td>
+              <td>{{ obj.account.profile.get_name }}</td>
+              <td>{{ obj.loan.type.name }}</td>
+              <td>
+                {% if obj.loan.amount %}
+                  {{ obj.loan.amount|intcomma }} {{ obj.loan.currency }}
+                {% else %}
+                  N/A
+                {% endif %}
+              </td>
+              <td>{{ obj.source }}</td>
+              <td>{{ obj.amount|intcomma }}</td>
+              <td>{{ obj.get_status_display }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+          <tfoot>
+            <tr>
+              <th colspan="6">Total Amount</th>
+              <th colspan="2" id="total-amount"></th>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript"
+            src="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.18/b-1.5.6/b-colvis-1.5.6/b-flash-1.5.6/b-html5-1.5.6/b-print-1.5.6/datatables.min.js"></script>
+<script>
+$(document).ready(function() {
+  var startDate  = $('#start_date').val();
+  var endDate  = $('#end_date').val();
+  var status = $('#status_filter').val();
+  // Initialize the DataTable
+  var table = $('.datatable').DataTable({
+    dom: 'Bfrtip',
+                buttons: [
+                {
+                    extend: 'copy',
+                    text: 'Copy',
+                    title: 'My Custom - Copy'
+                },
+                {
+                    extend: 'excel',
+                    text: 'Export to Excel',
+                    title: 'My Custom - Excel'
+                },
+                {
+                    extend: 'pdf',
+                    text: 'Export to PDF',
+                    title: 'My Custom - PDF'
+                },
+                {
+                    extend: 'print',
+                    text: 'Print',
+                    title: `${status} ${startDate} ${endDate} Print`
+                }
+                ]
+  });
+
+  // Add a custom filter function
+  $.fn.dataTable.ext.search.push(
+    function(settings, data, dataIndex) {
+      var date = data[0]; // Assumes date is in the first column
+      var statusColumn = data[7]; // Assumes date is in the eight column
+
+      var dateFilter =
+        (startDate === "" && endDate === "") ||
+        (startDate <= date && endDate === "") ||
+        (startDate === "" && endDate >= date) ||
+        (startDate <= date && endDate >= date);
+
+      var statusFilter = status === "" || status === statusColumn;
+
+      return dateFilter && statusFilter;
+    }
+  );
+  
+  // Bind an event listener to the date inputs
+  $('#start_date, #end_date, #status_filter').change(function() {
+    table.draw();
+    calculateTotalAmount();
+  });
+
+  // Function to calculate the total amount
+  function calculateTotalAmount() {
+    var total = 0;
+
+    // Iterate over the filtered rows
+    table.rows({ search: 'applied' }).every(function() {
+      var rowData = this.data();
+      var amount = parseFloat(rowData[6].replace(/[^0-9.-]+/g, ''));
+      total += amount;
+    });
+
+    // Display the total amount
+    $('#total-amount').text('Total Amount: ' + total.toFixed(2));
+  }
+
+  calculateTotalAmount();
+});
+</script>
+{% endblock %}

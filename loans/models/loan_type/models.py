@@ -26,6 +26,8 @@ from django.dispatch import receiver
 
 from .managers import LoanTypeManager as manager
 
+def photo_upload_path(instance, filename):
+    return f'upload/{instance}/{filename}'
 
 class LoanType(models.Model):
     # === Basic ===
@@ -38,7 +40,7 @@ class LoanType(models.Model):
     slug = extension_fields.AutoSlugField(populate_from='name', blank=True)
 
     # === Properties ===
-    
+    attachment = models.ImageField(upload_to=photo_upload_path, max_length=512, blank=True, null=True)
 
     # === State ===
     is_active = models.BooleanField(default=True)

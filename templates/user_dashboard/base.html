@@ -109,60 +109,6 @@
         $('#div_id_is_active').removeClass("form-check");
         $('#id_is_active').removeClass("checkboxinput form-check-input");
 
-        $("#id_province").prop('disabled', true);
-        $("#id_city").prop('disabled', true);
-
-        $("#id_country").on("change", function (e) {
-            var country_id = $(this).val();
-            var url = "{% url 'regions_by_country' %}?id=" + country_id;
-
-            $.get(url, function (data, status) {
-                var opts = "";
-
-                $.each(data, function (i, r) {
-                    opts = opts + "<option value='" + r.pk + "'>" + r.name + "</option>";
-                });
-
-                $("#id_region").empty().append(opts);
-
-                if (opts.length != 0)
-                    $("#id_region").prop('disabled', false);
-            });
-        });
-
-        $("#id_region").on("change", function (e) {
-            var region_id = $(this).val();
-            var url = "{% url 'provinces_by_region' %}?id=" + region_id;
-
-            $.get(url, function (data, status) {
-                var opts = "";
-
-                $.each(data, function (i, p) {
-                    opts = opts + "<option value='" + p.pk + "'>" + p.name + "</option>";
-                });
-
-                $("#id_province").empty().append(opts);
-                if (opts.length != 0)
-                    $("#id_province").prop('disabled', false);
-            });
-        });
-
-        $("#id_province").on("change", function (e) {
-            var province_id = $(this).val();
-            url = "{% url 'cities_by_province' %}?id=" + province_id;
-
-            $.get(url, function (data, status) {
-                var opts = "";
-
-                $.each(data, function (i, c) {
-                    opts = opts + "<option value='" + c.pk + "'>" + c.name + "</option>";
-                });
-
-                $("#id_city").empty().append(opts);
-                if (opts.length != 0)
-                    $("#id_city").prop('disabled', false);
-            });
-        });
     });
 
 </script>

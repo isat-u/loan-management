@@ -7,6 +7,7 @@ from paypal.standard.ipn.models import PayPalIPN
 from paypal.standard.widgets import ValueHiddenInput
 from paypal.utils import warn_untested
 from warnings import warn
+from django.forms import widgets
 
 from paypal.standard.conf import (
     BUY_BUTTON_IMAGE, DONATION_BUTTON_IMAGE, PAYPAL_CERT, PAYPAL_CERT_ID, PAYPAL_PRIVATE_CERT, PAYPAL_PUBLIC_CERT, POSTBACK_ENDPOINT, SANDBOX_POSTBACK_ENDPOINT, SUBSCRIPTION_BUTTON_IMAGE
@@ -14,6 +15,10 @@ from paypal.standard.conf import (
 
 
 class PaymentRequestForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(PaymentRequestForm, self).__init__(*args, **kwargs)
+        self.fields['account'].widget = widgets.HiddenInput()
+
     class Meta:
         model = PaymentRequest
         fields = [

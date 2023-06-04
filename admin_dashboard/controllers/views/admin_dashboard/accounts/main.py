@@ -144,7 +144,7 @@ class AdminDashboardAccountCreateView(LoginRequiredMixin, IsAdminViewMixin, View
                 
                 return HttpResponseRedirect(
                     reverse(
-                        'admin_dashboard_profiles_update',
+                        'dashboard_profiles_update',
                         kwargs={
                             'profile': user.profile.pk
                         }

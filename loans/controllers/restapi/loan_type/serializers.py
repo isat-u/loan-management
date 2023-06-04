@@ -17,6 +17,8 @@ class LoanTypePrivateSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'name',
+            'attachment',
+            'meta',
         )
 
 

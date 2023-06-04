@@ -53,9 +53,7 @@ INSTALLED_APPS += [
 INSTALLED_APPS += [
     'accounts',
     'profiles',
-    'locations',
     'loans',
     'amortizations',
     'payments',
-    'complaints',
 ]

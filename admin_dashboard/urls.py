@@ -5,7 +5,7 @@ from admin_dashboard.controllers.views.admin_dashboard.profiles import main as p
 from admin_dashboard.controllers.views.admin_dashboard.loans import main as loans_views
 from admin_dashboard.controllers.views.admin_dashboard.loan_types import main as loan_types_views
 from admin_dashboard.controllers.views.admin_dashboard.payment_requests import main as payment_requests_views
-from admin_dashboard.controllers.views.admin_dashboard.complaints import main as complaints_views
+from admin_dashboard.controllers.views.admin_dashboard.reports import main as report_views
 
 
 urlpatterns = [
@@ -61,11 +61,6 @@ urlpatterns += [
         'profile/create',
         profiles_views.AdminDashboardProfileCreateView.as_view(),
         name='admin_dashboard_profiles_create'
-    ),
-    path(
-        'profile/<profile>/update',
-        profiles_views.AdminDashboardProfileUpdateView.as_view(),
-        name='admin_dashboard_profiles_update'
     ),
     path(
         'profile/<profile>/delete',
@@ -176,32 +171,11 @@ urlpatterns += [
     ),
 ]
 
-# Complaint
-
+# Reports
 urlpatterns += [
     path(
-        'complaint/list',
-        complaints_views.AdminDashboardComplaintListView.as_view(),
-        name='admin_dashboard_complaints_list'
-    ),
-    path(
-        'complaint/<complaint>/detail',
-        complaints_views.AdminDashboardComplaintDetailView.as_view(),
-        name='admin_dashboard_complaints_detail'
-    ),
-    path(
-        'complaint/create',
-        complaints_views.AdminDashboardComplaintCreateView.as_view(),
-        name='admin_dashboard_complaints_create'
-    ),
-    path(
-        'complaint/<complaint>/update',
-        complaints_views.AdminDashboardComplaintUpdateView.as_view(),
-        name='admin_dashboard_complaints_update'
-    ),
-    path(
-        'complaint/<complaint>/delete',
-        complaints_views.AdminDashboardComplaintDeleteView.as_view(),
-        name='admin_dashboard_complaints_delete'
+        'reports/list',
+        report_views.AdminDashboardReportListView.as_view(),
+        name='admin_dashboard_reports_view'
     )
 ]

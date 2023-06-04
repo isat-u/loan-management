@@ -20,6 +20,7 @@ from django.core.paginator import Paginator
 
 from accounts.mixins.user_type_mixins import IsUserViewMixin
 from accounts.models.account.models import Account
+from amortizations.models import Amortization
 
 from loans.models.loan.models import Loan as Master
 from loans.models.loan_type.models import LoanType
@@ -80,7 +81,6 @@ class UserDashboardLoanListView(LoginRequiredMixin, IsUserViewMixin, View):
     def get(self, request, *args, **kwargs):
         print(kwargs.get('account', None))
         obj_list = Master.objects.filter(account__pk=kwargs.get('account', None))
-        print(obj_list)
         paginator = Paginator(obj_list, 50)
         page = request.GET.get('page')
         objs = paginator.get_page(page)
@@ -128,22 +128,97 @@ class UserDashboardLoanCreateView(LoginRequiredMixin, IsUserViewMixin, View):
     
     def post(self, request, *args, **kwargs):
         form = MasterForm(data=request.POST)
+        context = {
+            "page_title": "Create new Loan",
+            "menu_section": "admin_dashboard",
+            "menu_subsection": "loan",
+            "menu_action": "create",
+            "form": form
+        }
+
         if form.is_valid():
             data = form.save(commit=False)
             loan_type = form.cleaned_data['type']
             loan_type = LoanType.objects.get(pk=loan_type.pk)
-            loan_years = form.cleaned_data['years'] if form.cleaned_data['years'] is not None else 1
-            months = loan_years * 12
-            data.due_date = datetime.date.today() + relativedelta(months=months)
-            data.maturity = round(data.amount * decimal.Decimal(0.05), 2)
-            data.monthly_amortization = round(data.amount * decimal.Decimal(0.03), 2)
-            data.yearly_interest = loan_type.meta.get(f'{loan_years}')['yearly_interest']
-            data.monthly_interest = loan_type.meta.get(f'{loan_years}')['monthly_interest']
+            loan_months = form.cleaned_data['months'] if form.cleaned_data['months'] is not None else 1
+
+            try:
+                maximum_amount = loan_type.meta.get(f'{loan_months}')['maximum_amount']
+            except:
+                messages.error(
+                    request,
+                    f'No loan type details for {loan_months} months transaction.',
+                    extra_tags='danger'
+                )
+                return render(request, "user_dashboard/loans/form.html", context)
+
+            if  decimal.Decimal(form.cleaned_data['amount']) > decimal.Decimal(maximum_amount):
+                messages.error(
+                    request,
+                    f'The amount exceeds the maximum loan amount of {maximum_amount}',
+                    extra_tags='danger'
+                )
+                return render(request, "user_dashboard/loans/form.html", context)
 
             data.account = request.user
+
+            fee = loan_type.meta.get(f'{loan_months}')['fee']
+            print('*********')
+            print(fee)
+            print((decimal.Decimal(fee) / 100))
+            data.amount += decimal.Decimal(data.amount) * (decimal.Decimal(fee) / 100)
+            print(data.amount)
+            if(data.account.is_member):
+                data.yearly_interest = loan_type.meta.get(f'{loan_months}')['yearly_reg']
+                data.monthly_interest = loan_type.meta.get(f'{loan_months}')['monthly_reg']
+            else:
+                data.yearly_interest = loan_type.meta.get(f'{loan_months}')['yearly_aso']
+                data.monthly_interest = loan_type.meta.get(f'{loan_months}')['monthly_aso']
+
+            months = loan_months
+            data.due_date = datetime.date.today() + relativedelta(months=months)
+            
+            monthly_amortization_percentage = round((decimal.Decimal(data.yearly_interest) / 12) / 100, 2)
+            data.maturity = round(data.amount * decimal.Decimal(0.05), 2)
+            data.monthly_amortization = round(data.amount * monthly_amortization_percentage, 2)
+            
             data.is_active = False
             data.created_by = request.user
             data.save()
+
+            # generate amortization
+            amount = decimal.Decimal(data.amount)
+            months = data.months
+            monthly_interest = decimal.Decimal(data.monthly_interest)
+            ideal_principal = amount / months
+            ideal_balance = amount
+            actual_balance = amount
+            actual_monthly_amortization = data.monthly_amortization
+
+            for month in range(months):
+                month += 1
+                ideal_interest = ideal_balance * (monthly_interest / 100)
+                ideal_balance = ideal_balance - ideal_principal
+                ideal_monthly_amortization = ideal_principal + ideal_interest
+
+                actual_interest = actual_balance * (monthly_interest / 100)
+                actual_principal = actual_monthly_amortization - actual_interest
+                actual_balance = actual_balance - actual_principal
+
+                Amortization.objects.create(
+                    month=month,
+                    ideal_principal=ideal_principal,
+                    ideal_interest=ideal_interest,
+                    ideal_monthly_amortization=ideal_monthly_amortization,
+                    ideal_balance=ideal_balance,
+                    actual_principal=actual_principal,
+                    actual_interest=actual_interest,
+                    actual_monthly_amortization=actual_monthly_amortization,
+                    actual_balance=actual_balance,
+                    loan=data,
+                    created_by=request.user
+                )
+
             messages.success(
                 request,
                 f'{data} saved!',
@@ -193,7 +268,8 @@ class UserDashboardLoanDetailView(LoginRequiredMixin, IsUserViewMixin, View):
     def get(self, request, *args, **kwargs):
         obj = get_object_or_404(Master, pk=kwargs.get('loan', None))
         completed_payment = obj.payment_requests_loan.filter(status='completed').aggregate(Sum('amount'))
-
+        obj.monthly_interest /= 100
+        obj.yearly_interest /= 100
         total_payment = completed_payment['amount__sum']
         if total_payment:
             balance = obj.amount - total_payment

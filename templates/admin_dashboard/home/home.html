@@ -6,6 +6,9 @@
 {% block header_js %} {% endblock %}
 
 {% block page_wrapper_contents %}
+{% if messages %} {% for m in messages %} 
+    <div class="alert alert-{{ m.extra_tags }}">{{ m }}</div>
+{% endfor %} {% endif %} 
     <div class="row">
         <div class="col-md-4 col-sm-4">
             <div class="card shadow mb-4">
@@ -90,7 +93,7 @@
                                     <td>{{ obj.amount|floatformat:2|intcomma }}</td>
                                     <td class="font-weight-bold {% if obj.is_active == 'pending' %}text-warning {% else %}text-primary{% endif %}">{{ obj.is_active|title }}</td>
                                     <td class="td-actions text-right">
-                                        <a class="btn btn-info btn-sm btn-icon" href="{% url 'admin_dashboard_payment_requests_detail' obj.pk %}" title="Details">
+                                        <a class="btn btn-info btn-sm btn-icon" href="{% url 'admin_dashboard_loans_detail' obj.pk %}" title="Details">
                                             <i class="tim-icons icon-badge"></i>
                                         </a>
                                         <a class="btn btn-success btn-sm btn-icon" href="{% url 'admin_dashboard_loans_approve' obj.pk %}" title="Update">

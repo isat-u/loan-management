@@ -34,6 +34,15 @@
                 <div class="card-body">
                     <h4 class="card-title">{{ obj.name }}</h4>
                     <h6 class="card-subtitle mb-2 text-muted">Name</h6>
+                    <h4 class="card-title"><a href="{{ obj.attachment.url }}" target="_blank">View</a></h4>
+                    <h6 class="card-subtitle mb-2 text-muted">Attachment</h6>
+                    {% for key, value in obj.meta.items %}
+                        <p><code><strong>Months:</strong> {{ key }}</code></p>
+                        {% for inner_key, inner_value in value.items %}
+                            <p><code><strong>{{ inner_key }}:</strong> {{ inner_value }}</code></p>
+                        {% endfor %}
+                    {% endfor %}
+                    <h6 class="card-subtitle mb-2 text-muted">Details</h6>
                 </div>
             </div>
         </div>
@@ -61,7 +70,7 @@
         </div>
     </div>
 
-    <div class="card">
+    <div class="card mt-4">
         <div class="card-header">
             <h4 class="card-title">Actions</h4>
         </div>

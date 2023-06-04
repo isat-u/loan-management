@@ -16,7 +16,7 @@
                     {% if messages %} {% for m in messages %}
                         <div class="alert alert-{{ m.extra_tags }}">{{ m }}</div>
                     {% endfor %} {% endif %}
-                    <form method="post">
+                    <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
 
                         {{ form|crispy }}
@@ -45,19 +45,92 @@
     const addFieldButton = document.getElementById('add-field-button');
     let counter = document.getElementById('counter');
     let fieldCounter = 0;
+    if(`{{meta_string}}`) {
+        const jsonString = '{{ meta_string|escapejs }}';
+        
+        const jsonData = JSON.parse(jsonString);
+    
+        for (const key in jsonData) {
+            if (jsonData.hasOwnProperty(key)) {
+                const value = jsonData[key];
+                const newInput = document.createElement('div');
+                newInput.classList.add('row');
+                newInput.id = `field_${fieldCounter}`;
+    
+                newInput.innerHTML = `
+                <div class="col-md-10">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <input class="textinput textInput form-control mb-4" name="months_${fieldCounter}" placeholder="Months" value="${key}"  />
+                        </div>
+                        <div class="col-md-3">
+                            <input class="textinput textInput form-control mb-4" name="maximum_amount_${fieldCounter}" placeholder="Maximum Amount" value="${value.maximum_amount}" />
+                        </div>
+                        <div class="col-md-3">
+                            <input class="textinput textInput form-control mb-4" name="penalty_${fieldCounter}" placeholder="Penalty" value="${value.penalty}" />
+                        </div>
+                        <div class="col-md-3">
+                            <input class="textinput textInput form-control mb-4" name="fee_${fieldCounter}" placeholder="Service Fee" value="${value.fee}" />
+                        </div>
+                        <div class="col-md-3">
+                            <input class="textinput textInput form-control mb-4" name="monthly_reg_${fieldCounter}" placeholder="Member Monthly Interest" value="${monthly_reg_interest}" />
+                        </div>
+                        <div class="col-md-3">
+                            <input class="textinput textInput form-control mb-4" name="monthly_aso_${fieldCounter}" placeholder="Assoc. Monthly Interest" value="${monthly_aso_interest}" />
+                        </div>
+                        <div class="col-md-3">
+                            <input class="textinput textInput form-control mb-4" name="yearly_reg_${fieldCounter}" placeholder="Member Yearly Interest" value="${yearly_reg_interest}" />
+                        </div>
+                        <div class="col-md-3">
+                            <input class="textinput textInput form-control mb-4" name="yearly_aso_${fieldCounter}" placeholder="Assoc. Yearly Interest" value="${yearly_aso_interest}" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-danger" data-field="${fieldCounter}">Delete</button>
+                </div>
+                `;
+    
+                inputContainer.appendChild(newInput);
+                fieldCounter++;
+            }
+        }
+    
+        counter.value = fieldCounter;
+    }
+
     function handleClick() {
         const newInput = document.createElement('div');
         
         newInput.innerHTML = `
             <div class="row" id="field_${fieldCounter}">
-                <div class="col-md-2">
-                    <input class="textinput textInput form-control mb-4" name="years_${fieldCounter}" placeholder="Years"  />
-                </div>
-                <div class="col-md-4">
-                    <input class="textinput textInput form-control mb-4" name="monthly_${fieldCounter}" placeholder="Monthly Interest"  />
-                </div>
-                <div class="col-md-4">
-                    <input class="textinput textInput form-control mb-4" name="yearly_${fieldCounter}" placeholder="Yearly Interest"  />
+                <div class="col-md-10">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <input class="textinput textInput form-control mb-4" name="months_${fieldCounter}" placeholder="Months"  />
+                        </div>
+                        <div class="col-md-3">
+                            <input class="textinput textInput form-control mb-4" name="maximum_amount_${fieldCounter}" placeholder="Maximum Amount"  />
+                        </div>
+                        <div class="col-md-3">
+                            <input class="textinput textInput form-control mb-4" name="penalty_${fieldCounter}" placeholder="Penalty"  />
+                        </div>
+                        <div class="col-md-3">
+                            <input class="textinput textInput form-control mb-4" name="fee_${fieldCounter}" placeholder="Service Fee"  />
+                        </div>
+                        <div class="col-md-3">
+                            <input class="textinput textInput form-control mb-4" name="monthly_reg_${fieldCounter}" placeholder="Member Monthly Interest"  />
+                        </div>
+                        <div class="col-md-3">
+                            <input class="textinput textInput form-control mb-4" name="monthly_aso_${fieldCounter}" placeholder="Assoc. Monthly Interest"  />
+                        </div>
+                        <div class="col-md-3">
+                            <input class="textinput textInput form-control mb-4" name="yearly_reg_${fieldCounter}" placeholder="Member Yearly Interest"  />
+                        </div>
+                        <div class="col-md-3">
+                            <input class="textinput textInput form-control mb-4" name="yearly_aso_${fieldCounter}" placeholder="Assoc. Yearly Interest"  />
+                        </div>
+                    </div>
                 </div>
                 <div class="col-md-2">
                     <button type="button" class="btn btn-danger" data-field="${fieldCounter}">Delete</button>

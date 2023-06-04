@@ -6,6 +6,9 @@
 {% block header_js %} 
 {% endblock %} 
 {% block page_wrapper_contents %}
+{% if messages %} {% for m in messages %} 
+    <div class="alert alert-{{ m.extra_tags }}">{{ m }}</div>
+{% endfor %} {% endif %} 
 <div class="row">
   <div class="col-md-12 col-sm-12">
     <div class="card shadow mb-4">
@@ -117,7 +120,7 @@
 {% block scripts %}
     <script type="text/javascript">
         $(document).ready(function () {
-            const url = `{% url 'user_loans' %}?account={{ user.pk }}`
+            const url = `{% url 'user_loans' %}?account={{ user.pk }}`;
             $.get(url, function(data, status) {
                 let tableData = '';
                 $.each(data.results, function(index, value) {
@@ -142,10 +145,8 @@
                 });
 
                 $('#loan-table').empty().append(tableData);
+              });
             });
-
-
-        });
 
         function showModalContent(button) {
             let amount = button.dataset.amount;

@@ -15,8 +15,6 @@ class ProfileForm(forms.ModelForm):
             'gender',
             'date_of_birth',
             'civil_status',
-            'address',
-            'city',
             'barangay',
             'monthly_salary',
             'spouse_first_name',

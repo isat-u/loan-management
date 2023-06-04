@@ -13,10 +13,15 @@
                     <h2 class="card-title">{{ page_title }}</h2>
                 </div>
                 <div class="card-body">
+                    {% if messages %} {% for m in messages %} 
+                        <div class="alert alert-{{ m.extra_tags }}">{{ m }}</div>
+                    {% endfor %} {% endif %} 
                     <form method="post">
                         {% csrf_token %}
 
                         {{ form|crispy }}
+                        <div id="input-container" class="mb-4 mx-1">
+                        </div>
                         <p>
                             <button type="submit" class="btn btn-success animation-on-hover">
                                 Submit
@@ -32,4 +37,74 @@
 {% endblock %}
 
 {% block scripts %}
+<script>
+    let type = document.querySelector('#id_type');
+    let months = document.querySelector('#id_months');
+    let meta_data;
+    let loan_details;
+    let loan_type;
+    const inputContainer = document.getElementById('input-container');
+
+    type.addEventListener('change', function() {
+        let type_id = type.value;
+        let url = "{% url 'api_private_loan_type_list_detail' %}?id=" + type_id;
+
+        $.get(url, function (data, status) {
+                [loan_type] = data.results
+                if(loan_type) {
+                    meta_data = loan_type.meta;
+                }
+                console.log(meta_data);
+            });
+    })
+
+    months.addEventListener('change', function() {
+        const newInput = document.createElement('div');
+        
+        const filteredData = Object.keys(meta_data).filter(key => parseInt(key) == parseInt(months.value))
+        .reduce((obj, key) => {
+            obj[key] = meta_data[key];
+            return obj;
+        }, {});
+        console.log('filteredData', filteredData);
+        inputContainer.innerHTML = '';
+        
+        if(Object.keys(filteredData).length == 0) {
+            
+            loan_details = 'No record found!'
+            newInput.innerHTML = `
+            <div class="row">
+                <div class="col-md-12">
+                    ${loan_details}
+                </div>
+            </div>
+            `;
+            inputContainer.appendChild(newInput);
+        } else {
+            loan_details = Object.values(filteredData);
+            data = loan_details[0]
+            newInput.innerHTML = `
+            <div class="row">
+                <div class="col-md-4">
+                    <p>Maximum Amount: ${data.maximum_amount}</p>
+                </div>
+                <div class="col-md-4">
+                    <p>Monthly Interest: ${data.monthly_interest}</p>
+                </div>
+                <div class="col-md-4">
+                    <p>Yearly Interest: ${data.yearly_interest}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <a href="${loan_type.attachment}" target="_blank">
+                    <p>Loan Information</p>
+                </a>
+                </div>
+            </div>
+        `;
+        inputContainer.appendChild(newInput);
+        }
+    })
+</script>
 {% endblock %}
