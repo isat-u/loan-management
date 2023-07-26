@@ -4,11 +4,11 @@
 ## Applications
 | Name | Description | Desirement | Link | 
 | :--- | :---------- | :--------: | :--- |
-|cmder | Cmder is a software package created out of pure frustration over the absence of nice console emulators on Windows. | [Link](https://cmder.net/) |
-|Virtual Box | VirtualBox is a general-purpose full virtualizer for x86 hardware, targeted at server, desktop and embedded use. | [Link](https://www.virtualbox.org/wiki/Downloads) |
-|Vagrant | Vagrant is a tool for building and managing virtual machine environments in a single workflow. | [Link](https://www.vagrantup.com/downloads.html) |
-|PyCharm | Integrated Development Environment for Python. | [Link](https://www.jetbrains.com/pycharm/download/#section=windows) |
-|Git | Git is a free and open source distributed version control system designed to handle everything from small to very large projects with speed and efficiency. | [Link](https://git-scm.com/downloads) |
+|cmder | Cmder is a software package created out of pure frustration over the absence of nice console emulators on Windows. |Optional | [Link](https://cmder.net/) |
+|Virtual Box | VirtualBox is a general-purpose full virtualizer for x86 hardware, targeted at server, desktop and embedded use. |Required | [Link](https://www.virtualbox.org/wiki/Downloads) |
+|Vagrant | Vagrant is a tool for building and managing virtual machine environments in a single workflow. |Required | [Link](https://www.vagrantup.com/downloads.html) |
+|PyCharm | Integrated Development Environment for Python. | [Link](https://www.jetbrains.com/pycharm/download/#section=windows) |Optional |
+|Git | Git is a free and open source distributed version control system designed to handle everything from small to very large projects with speed and efficiency. |Required | [Link](https://git-scm.com/downloads) |
 
 ## Languages
 - Python 3.7.4
