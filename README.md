@@ -66,4 +66,5 @@
 1. Run `python manage.py createsuperuser` command
 2. Enter username, email and password
 
-
+### Running Django Project
+Run `python manage.py runserver_plus 0:8000` command
